@@ -1,0 +1,11 @@
+/*
+ * Filename: /home/yuyangz/Documents/courses/compilation/Analyzer/data/output.txt
+ * Path: /home/yuyangz/Documents/courses/compilation/Analyzer/data
+ * Created Date: Tuesday, October 12th 2021, 10:02:35 pm
+ * Author: yuyangz
+ * 
+ * Copyright (c) 2021 yuyangz.
+ */
+
+
+
