@@ -1,11 +1,31 @@
-/*
- * Filename: /home/yuyangz/Documents/courses/compilation/Analyzer/data/output.txt
- * Path: /home/yuyangz/Documents/courses/compilation/Analyzer/data
- * Created Date: Tuesday, October 12th 2021, 10:02:35 pm
- * Author: yuyangz
- * 
- * Copyright (c) 2021 yuyangz.
- */
-
-
-
+<reserved word, int>
+<symbol, )>
+<symbol, {>
+<reserved word, int>
+<symbol, =>
+<number, 1>
+<symbol, ,>
+<symbol, =>
+<number, 2>
+<symbol, ;>
+<reserved word, int>
+<symbol, =>
+<number, 0>
+<symbol, ;>
+<symbol, (>
+<symbol, <>
+<symbol, {>
+<symbol, =>
+<symbol, }>
+<symbol, {>
+<symbol, =>
+<symbol, }>
+<symbol, (>
+<symbol, !=>
+<number, 0>
+<symbol, )>
+<symbol, {>
+<symbol, =>
+<symbol, +>
+<symbol, }>
+<symbol, }>

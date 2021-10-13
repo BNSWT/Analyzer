@@ -1,2 +1,2 @@
 # Analyzer
-[School Work] Compliation Analyzer of a C-like language
+[School Work] Compilation Analyzer of a C-like language
