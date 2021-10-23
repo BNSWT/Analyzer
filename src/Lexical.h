@@ -10,12 +10,10 @@ using namespace std;
 
 enum STATE{
     INIT, //Init state.
-    OP, //The state when a certain word ends and the result is to be written into the vector.
     LETTER,
     NUM,
     SYMBOL
 };
-
 
 enum TYPE{
     RESERVED_WORD,
@@ -40,15 +38,60 @@ enum SYMBOL_TYPE{
     NOT_INCLUDED
 };
 
-const string type[] = {
-    "reserved_word",
-    "identifier",
-    "number",
-    "assign",
-    "calculator",
-    "delimiter",
-    "divider",
+const string assign[] = {
+    "=",
+    "+=",
+    "-=",
+    "*=",
+    "/="
     ""
+};
+
+const string calculator[]={
+    //calculate
+    "+",
+    "-",
+    "*",
+    "/",
+    "++",
+    "--",
+    //compare
+    ">",
+    "<",
+    ">=",
+    "<=",
+    "==",
+    "!=",
+    //logic
+    "&&",
+    "||",
+    "!",
+    // bit calculate
+    "~",
+    "&",
+    "|",
+    "<<",
+    ">>",
+
+    ""
+};
+
+const string delimeter[] = {
+    ";",
+    ""
+};
+
+const string divider[]={
+    ","
+    ""
+};
+
+const string bracket[]={
+    "(",
+    ")",
+    "{",
+    "}"
+    "",
 };
 
 const string reservedWords[] = {
@@ -63,10 +106,6 @@ const string reservedWords[] = {
 };
 
 const char mustSingleSymbol[] = {
-    '+',
-    '-',
-    '*',
-    '/',
     '{',
     '}',
     '(',
@@ -77,6 +116,10 @@ const char mustSingleSymbol[] = {
 };
 
 const char mayDoubleSymbol[] = {
+    '+',
+    '-',
+    '*',
+    '/',
     '=',
     '>',
     '<',

@@ -1,0 +1,63 @@
+<reserved word, int>
+<reserved word, main>
+<divider symbol, (>
+<divider symbol, )>
+<divider symbol, {>
+<reserved word, int>
+<identifier, xVariable>
+<undefined, ^>
+<undefined, ^>
+<undefined, %>
+<assign symbol, =>
+<number, 1>
+<divider symbol, ,>
+<identifier, y>
+<assign symbol, =>
+<number, 2>
+<delimeter symbol, ;>
+<reserved word, int>
+<identifier, z>
+<assign symbol, =>
+<number, 0>
+<delimeter symbol, ;>
+<reserved word, if>
+<divider symbol, (>
+<identifier, xVariable>
+<assign symbol, <>
+<identifier, y>
+<divider symbol, )>
+<divider symbol, {>
+<identifier, z>
+<assign symbol, =>
+<identifier, y>
+<assign symbol, />
+<identifier, xVariable>
+<delimeter symbol, ;>
+<divider symbol, }>
+<reserved word, else>
+<divider symbol, {>
+<identifier, z>
+<assign symbol, =>
+<identifier, xVariable>
+<assign symbol, *>
+<identifier, y>
+<delimeter symbol, ;>
+<divider symbol, }>
+<reserved word, while>
+<divider symbol, (>
+<identifier, z>
+<assign symbol, !=>
+<number, 0>
+<divider symbol, )>
+<divider symbol, {>
+<identifier, z>
+<assign symbol, =>
+<identifier, z>
+<assign symbol, +>
+<identifier, xVariable>
+<delimeter symbol, ;>
+<divider symbol, }>
+<reserved word, return>
+<number, 0>
+<delimeter symbol, ;>
+<divider symbol, }>

@@ -4,6 +4,7 @@
  */
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 #include <sstream>
@@ -66,4 +67,32 @@ vector<token> mainProcess(string source)
         state = findNext(state, source[i], buffer, res);
     }
     return res;
+}
+
+void fileProcess(const char* inputPath, const char* outputPath)
+{
+    ifstream infile;
+    infile.open(inputPath);
+    if (infile.fail()) {
+        cout << "Open " << inputPath << " failed" << endl;
+    }
+
+    string file;
+    char data[10000];
+    infile.read(data, 10000);
+    file = data;
+    infile.close();
+
+    vector<token> anaRes = mainProcess(file);
+
+    ofstream outfile;
+    outfile.open(outputPath);
+    if (outfile.fail()) {
+         cout << "Open " << outputPath << " failed" << endl;
+    }
+
+    for (vector<token>::iterator it = anaRes.begin(); it != anaRes.end(); it++) {
+        outfile << "<" << (*it).type  << ", "<< (*it).value << ">" << endl;
+    }
+    outfile.close();
 }

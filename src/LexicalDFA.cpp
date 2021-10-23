@@ -34,15 +34,27 @@ SYMBOL_TYPE findSymbolType(char input)
     return SYMBOL_TYPE::NOT_INCLUDED;
 }
 
+bool lookUp(const string dict[], const char* dictName, string &item, vector<token> &anaRes)
+{
+    for (int i = 0; dict[i]!=""; i++) {
+        if (item==dict[i]) {
+            anaRes.push_back({dictName, item});
+            item.clear();
+            return true;
+        }
+    }
+    return false;
+}
+
 void operation(STATE curState, string &buffer, vector<token> &anaRes)
 {
     switch(curState) {
         case STATE::LETTER:
-            for (int i = 0; reservedWords[i]!=""; i++) {
-                if (strcmp(buffer.c_str(), reservedWords[i].c_str())==0) {
-                    //cout << "buffer: " << buffer << endl;
-                    //cout << "reservedWords[" << i << "]:" << reservedWords[i] << endl;
-                    anaRes.push_back({"reserved word", buffer});
+            if(lookUp(reservedWords, "reserved word",buffer, anaRes))
+                return;
+            for (int i =0; i < buffer.size(); i++) {
+                if (findInputType(buffer[i])==INPUT_TYPE::SYMBOL_INPUT) {
+                    anaRes.push_back({"undefined", buffer});
                     buffer.clear();
                     return;
                 }
@@ -53,7 +65,18 @@ void operation(STATE curState, string &buffer, vector<token> &anaRes)
             anaRes.push_back({"number", buffer});
             break;
         case STATE::SYMBOL:
-            anaRes.push_back({"symbol", buffer});
+            if(lookUp(assign, "assign symbol",buffer, anaRes))
+                return;
+            if(lookUp(calculator, "calculator symbol",buffer, anaRes))
+                return;
+            if(lookUp(delimeter, "delimeter symbol",buffer, anaRes))
+                return;
+            if(lookUp(divider, "divider symbol",buffer, anaRes))
+                return;
+            if(lookUp(bracket, "bracket symbol",buffer, anaRes))
+                return;
+            anaRes.push_back({"undefined", buffer});
+            break;
     }
     buffer.clear();
 } 
@@ -108,10 +131,11 @@ STATE symbolCase(STATE curState, char input, string &buffer, vector<token> &anaR
             return STATE::SYMBOL;
             break;
         default:
-            if (buffer.size()) {
-                operation(curState, buffer, anaRes);
-                curState = STATE::INIT;
+            if (buffer.size() == 0) {
+                buffer += input;
             }
+            operation(curState, buffer, anaRes);
+            curState = STATE::INIT;
             return findNext(curState, input, buffer, anaRes);
             break;
     }
