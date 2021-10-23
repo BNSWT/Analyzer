@@ -31,7 +31,7 @@ int main()
 
     ofstream outfile;
     outfile.open("../data/output.txt");
-    if (infile.fail()) {
+    if (outfile.fail()) {
         cout << "Open output file failed" << endl;
     }
 

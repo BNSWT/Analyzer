@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <cstring>
+#include <iostream>
 
 #include"Lexical.h"
 
@@ -38,10 +39,13 @@ void operation(STATE curState, string &buffer, vector<token> &anaRes)
     switch(curState) {
         case STATE::LETTER:
             for (int i = 0; reservedWords[i]!=""; i++) {
-                if (buffer == reservedWords[i])
+                if (strcmp(buffer.c_str(), reservedWords[i].c_str())==0) {
+                    //cout << "buffer: " << buffer << endl;
+                    //cout << "reservedWords[" << i << "]:" << reservedWords[i] << endl;
                     anaRes.push_back({"reserved word", buffer});
                     buffer.clear();
                     return;
+                }
             }
             anaRes.push_back({"identifier", buffer});
             break;
@@ -68,7 +72,7 @@ STATE letterCase(STATE curState, char input, string &buffer, vector<token> &anaR
             break;
         default:
             operation(curState, buffer, anaRes);
-            curState = STATE::INIT;
+            curState = STATE::SYMBOL;
             return symbolCase(curState, input, buffer, anaRes);
             break;
     }

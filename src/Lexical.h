@@ -53,6 +53,7 @@ const string type[] = {
 
 const string reservedWords[] = {
     "int",
+    "main",
     "void",
     "if",
     "else",
