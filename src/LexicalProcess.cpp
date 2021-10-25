@@ -8,6 +8,7 @@
 using namespace std;
 
 extern STATE findNext(STATE curState, char input, string &buffer, vector<token> &anaRes);
+extern void operation(STATE curState, string &buffer, vector<token> &anaRes);
 
 static void deFormat(string &source)
 {
@@ -61,6 +62,7 @@ vector<token> mainProcess(string source)
     for (int i = 0; i < (int)source.size(); i++){
         state = findNext(state, source[i], buffer, res);
     }
+    operation(state, buffer, res);
     return res;
 }
 
@@ -74,6 +76,8 @@ void fileProcess(const char* inputPath, const char* outputPath)
 
     string file;
     char data[10000];
+    memset(data, 0, 10000*sizeof(char));
+    infile.clear();
     infile.read(data, 10000);
     file = data;
     infile.close();

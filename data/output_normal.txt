@@ -13,7 +13,7 @@
 <reserved word, double>
 <identifier, d>
 <assign symbol, =>
-<float, 12>
+<float, 1.2>
 <delimeter symbol, ;>
 <reserved word, int>
 <identifier, xVariable>

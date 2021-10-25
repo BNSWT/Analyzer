@@ -60,7 +60,3 @@
 <number, 0>
 <delimeter symbol, ;>
 <bracket symbol, }>
-<reserved word, return>
-<number, 0>
-<delimeter symbol, ;>
-<bracket symbol, }>

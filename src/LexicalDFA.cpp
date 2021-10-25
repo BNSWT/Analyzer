@@ -9,7 +9,7 @@
 using namespace std;
 
 STATE findNext(STATE curState, char input, string &buffer, vector<token> &anaRes);
-static void operation(STATE curState, string &buffer, vector<token> &anaRes);
+void operation(STATE curState, string &buffer, vector<token> &anaRes);
 static STATE letterCase(STATE curState, char input, string &buffer, vector<token> &anaRes);
 static STATE numberCase(STATE curState, char input, string &buffer, vector<token> &anaRes);
 static STATE symbolCase(STATE curState, char input, string &buffer, vector<token> &anaRes);
@@ -53,7 +53,7 @@ static bool lookUp(const string dict[], const char* dictName, string &item, vect
     return false;
 }
 
-static void operation(STATE curState, string &buffer, vector<token> &anaRes)
+void operation(STATE curState, string &buffer, vector<token> &anaRes)
 {
     if (buffer.size()){
         switch(curState) {
