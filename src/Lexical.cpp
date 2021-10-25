@@ -3,9 +3,10 @@
  * Author: yuyangz
  */
 
-#include "LexicalProcess.cpp"
+#include "Lexical.h"
 
 using namespace std;
+
 
 int main()
 {

@@ -3,28 +3,23 @@
  * Author: yuyangz
  */
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
-#include <sstream>
-
 #include "Lexical.h"
-#include "LexicalDFA.cpp"
 
 using namespace std;
 
-void deFormat(string &source)
+extern STATE findNext(STATE curState, char input, string &buffer, vector<token> &anaRes);
+
+static void deFormat(string &source)
 {
     
     // deComment
-    for (int i = 0; i < source.size(); i++) {
-        if (source[i] == '/' && i+1 < source.size()) {
+    for (int i = 0; i < (int)source.size(); i++) {
+        if (source[i] == '/' && i+1 < (int)source.size()) {
             int pos = i;
             int j = i+1;
             if (source[j] == '/') {
                 int npos = 2;
-                while(j < source.size() && source[j]!='\n' && source[j]!='\r') {
+                while(j < (int)source.size() && source[j]!='\n' && source[j]!='\r') {
                     j++;
                     npos++;
                 }
@@ -32,7 +27,7 @@ void deFormat(string &source)
             }
             else if (source[j] == '*') {
                 int npos = 2;
-                while(j < source.size() && (source[j]!='/' || source[j-1]!='*')) {
+                while(j < (int)source.size() && (source[j]!='/' || source[j-1]!='*')) {
                     j++;
                     npos++;
                 }
@@ -63,7 +58,7 @@ vector<token> mainProcess(string source)
 
     vector<token> res;
     string buffer;
-    for (int i = 0; i < source.size(); i++){
+    for (int i = 0; i < (int)source.size(); i++){
         state = findNext(state, source[i], buffer, res);
     }
     return res;
@@ -88,7 +83,7 @@ void fileProcess(const char* inputPath, const char* outputPath)
     ofstream outfile;
     outfile.open(outputPath);
     if (outfile.fail()) {
-         cout << "Open " << outputPath << " failed" << endl;
+        cout << "Open " << outputPath << " failed" << endl;
     }
 
     for (vector<token>::iterator it = anaRes.begin(); it != anaRes.end(); it++) {

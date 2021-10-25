@@ -5,6 +5,11 @@
  */
 
 #include <string>
+#include <vector>
+#include <cstring>
+#include <iostream>
+#include <sstream>
+#include <fstream>
 
 using namespace std;
 
@@ -140,8 +145,5 @@ struct token{
     string value;
 };
 
-STATE findNext(STATE curState, char input, string &buffer, vector<token> &anaRes);
-void operation(STATE curState, string &buffer, vector<token> &anaRes);
-STATE letterCase(STATE curState, char input, string &buffer, vector<token> &anaRes);
-STATE numberCase(STATE curState, char input, string &buffer, vector<token> &anaRes);
-STATE symbolCase(STATE curState, char input, string &buffer, vector<token> &anaRes);
+vector<token> mainProcess(string source);
+void fileProcess(const char* inputPath, const char* outputPath);

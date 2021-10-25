@@ -1,7 +1,7 @@
 /*
  * Filename: /home/yuyangz/Documents/courses/compilation/Analyzer/.vscode/launch.json
  * Path: /home/yuyangz/Documents/courses/compilation/Analyzer/.vscode
- * Created Date: Wednesday, October 13th 2021, 8:34:38 am
+ * Created Date: Monday, October 25th 2021, 10:07:29 am
  * Author: yuyangz
  * 
  * Copyright (c) 2021 yuyangz.
@@ -19,7 +19,7 @@
             "name": "g++ - 生成和调试活动文件",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${fileDirname}/../bin/${fileBasenameNoExtension}",
+            "program": "${workspaceFolder}/bin/${fileBasenameNoExtension}",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

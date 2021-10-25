@@ -2,18 +2,21 @@
  * Created Date: 2021-10-12 21:29:25
  * Author: yuyangz
  */
-#include <string>
-#include <vector>
-#include <cstring>
-#include <iostream>
+
 
 #include"Lexical.h"
 
 using namespace std;
 
-INPUT_TYPE findInputType(char input)
+STATE findNext(STATE curState, char input, string &buffer, vector<token> &anaRes);
+static void operation(STATE curState, string &buffer, vector<token> &anaRes);
+static STATE letterCase(STATE curState, char input, string &buffer, vector<token> &anaRes);
+static STATE numberCase(STATE curState, char input, string &buffer, vector<token> &anaRes);
+static STATE symbolCase(STATE curState, char input, string &buffer, vector<token> &anaRes);
+
+static INPUT_TYPE findInputType(char input)
 {
-    if (input >= 'a' && input <= 'z' || input >= 'A' && input <='Z')
+    if ((input >= 'a' && input <= 'z') || (input >= 'A' && input <='Z'))
         return INPUT_TYPE::LETTER_INPUT;
     else if (input >= '0' && input <= '9')
         return INPUT_TYPE::NUMBER_INPUT;
@@ -21,7 +24,7 @@ INPUT_TYPE findInputType(char input)
         return INPUT_TYPE::SYMBOL_INPUT;
 }
 
-SYMBOL_TYPE findSymbolType(char input)
+static SYMBOL_TYPE findSymbolType(char input)
 {
     for (int i =0; mustSingleSymbol[i]!=0; i++) {
         if (input == mustSingleSymbol[i])
@@ -34,7 +37,7 @@ SYMBOL_TYPE findSymbolType(char input)
     return SYMBOL_TYPE::NOT_INCLUDED;
 }
 
-bool lookUp(const string dict[], const char* dictName, string &item, vector<token> &anaRes)
+static bool lookUp(const string dict[], const char* dictName, string &item, vector<token> &anaRes)
 {
     for (int i = 0; dict[i]!=""; i++) {
         if (item==dict[i]) {
@@ -46,13 +49,13 @@ bool lookUp(const string dict[], const char* dictName, string &item, vector<toke
     return false;
 }
 
-void operation(STATE curState, string &buffer, vector<token> &anaRes)
+static void operation(STATE curState, string &buffer, vector<token> &anaRes)
 {
     switch(curState) {
         case STATE::LETTER:
             if(lookUp(reservedWords, "reserved word",buffer, anaRes))
                 return;
-            for (int i =0; i < buffer.size(); i++) {
+            for (int i =0; i < (int)buffer.size(); i++) {
                 if (findInputType(buffer[i])==INPUT_TYPE::SYMBOL_INPUT) {
                     anaRes.push_back({"undefined", buffer});
                     buffer.clear();
@@ -77,11 +80,13 @@ void operation(STATE curState, string &buffer, vector<token> &anaRes)
                 return;
             anaRes.push_back({"undefined", buffer});
             break;
+        default:
+            break;
     }
     buffer.clear();
 } 
 
-STATE letterCase(STATE curState, char input, string &buffer, vector<token> &anaRes)
+static STATE letterCase(STATE curState, char input, string &buffer, vector<token> &anaRes)
 {
     // identifier or reserved word. Judged in operation.
     switch(findInputType(input)) {
@@ -101,7 +106,7 @@ STATE letterCase(STATE curState, char input, string &buffer, vector<token> &anaR
     }
 }
 
-STATE numberCase(STATE curState, char input, string &buffer, vector<token> &anaRes)
+static STATE numberCase(STATE curState, char input, string &buffer, vector<token> &anaRes)
 {
     //number or wrong.
     switch(findInputType(input)) {
@@ -116,7 +121,7 @@ STATE numberCase(STATE curState, char input, string &buffer, vector<token> &anaR
     }
 }
 
-STATE symbolCase(STATE curState, char input, string &buffer, vector<token> &anaRes)
+static STATE symbolCase(STATE curState, char input, string &buffer, vector<token> &anaRes)
 {
     switch(findSymbolType(input)) {
         case SYMBOL_TYPE::MUST_SINGLE:
