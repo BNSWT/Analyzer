@@ -17,7 +17,11 @@ enum STATE{
     INIT, //Init state.
     LETTER,
     NUM,
-    SYMBOL
+    SYMBOL,
+    OPEN_DOT,
+    OPEN_QUOTE,
+    FLOAT,
+    STRING
 };
 
 enum TYPE{
@@ -34,7 +38,8 @@ enum INPUT_TYPE{
     LETTER_INPUT,
     NUMBER_INPUT,
     SYMBOL_INPUT,
-    SPACE_INPUT
+    DOT_INPUT,
+    QUOTE_INPUT
 };
 
 enum SYMBOL_TYPE{
@@ -48,7 +53,7 @@ const string assign[] = {
     "+=",
     "-=",
     "*=",
-    "/="
+    "/=",
     ""
 };
 
@@ -87,7 +92,7 @@ const string delimeter[] = {
 };
 
 const string divider[]={
-    ","
+    ",",
     ""
 };
 
@@ -95,14 +100,34 @@ const string bracket[]={
     "(",
     ")",
     "{",
-    "}"
-    "",
+    "}",
+    "[",
+    "]",
+    ""
+};
+
+const string other[] = {
+    "#",
+    ""
 };
 
 const string reservedWords[] = {
+    "string",
+    "float",
+    "double",
     "int",
-    "main",
     "void",
+    "char"
+
+    "include",
+    "iostream",
+
+    "using",
+    "namespace",
+    "std",
+    
+    "main",
+    
     "if",
     "else",
     "while",

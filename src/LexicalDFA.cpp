@@ -20,6 +20,10 @@ static INPUT_TYPE findInputType(char input)
         return INPUT_TYPE::LETTER_INPUT;
     else if (input >= '0' && input <= '9')
         return INPUT_TYPE::NUMBER_INPUT;
+    else if (input == '.')
+        return INPUT_TYPE::DOT_INPUT;
+    else if (input == '"')
+        return INPUT_TYPE::QUOTE_INPUT;
     else
         return INPUT_TYPE::SYMBOL_INPUT;
 }
@@ -51,37 +55,51 @@ static bool lookUp(const string dict[], const char* dictName, string &item, vect
 
 static void operation(STATE curState, string &buffer, vector<token> &anaRes)
 {
-    switch(curState) {
-        case STATE::LETTER:
-            if(lookUp(reservedWords, "reserved word",buffer, anaRes))
-                return;
-            for (int i =0; i < (int)buffer.size(); i++) {
-                if (findInputType(buffer[i])==INPUT_TYPE::SYMBOL_INPUT) {
-                    anaRes.push_back({"undefined", buffer});
-                    buffer.clear();
+    if (buffer.size()){
+        switch(curState) {
+            case STATE::LETTER:
+                if(lookUp(reservedWords, "reserved word",buffer, anaRes))
                     return;
+                for (int i =0; i < (int)buffer.size(); i++) {
+                    if (findInputType(buffer[i])==INPUT_TYPE::SYMBOL_INPUT) {
+                        anaRes.push_back({"undefined", buffer});
+                        buffer.clear();
+                        return;
+                    }
                 }
-            }
-            anaRes.push_back({"identifier", buffer});
-            break;
-        case STATE::NUM:
-            anaRes.push_back({"number", buffer});
-            break;
-        case STATE::SYMBOL:
-            if(lookUp(assign, "assign symbol",buffer, anaRes))
-                return;
-            if(lookUp(calculator, "calculator symbol",buffer, anaRes))
-                return;
-            if(lookUp(delimeter, "delimeter symbol",buffer, anaRes))
-                return;
-            if(lookUp(divider, "divider symbol",buffer, anaRes))
-                return;
-            if(lookUp(bracket, "bracket symbol",buffer, anaRes))
-                return;
-            anaRes.push_back({"undefined", buffer});
-            break;
-        default:
-            break;
+                anaRes.push_back({"identifier", buffer});
+                break;
+            case STATE::NUM:
+                anaRes.push_back({"number", buffer});
+                break;
+            case STATE::SYMBOL:
+                if(lookUp(assign, "assign symbol",buffer, anaRes))
+                    return;
+                if(lookUp(calculator, "calculator symbol",buffer, anaRes))
+                    return;
+                if(lookUp(delimeter, "delimeter symbol",buffer, anaRes))
+                    return;
+                if(lookUp(divider, "divider symbol",buffer, anaRes))
+                    return;
+                if(lookUp(bracket, "bracket symbol",buffer, anaRes))
+                    return;
+                if(lookUp(other, "other symbol", buffer, anaRes))
+                    return;
+                anaRes.push_back({"undefined", buffer});
+                break;
+            case STATE::OPEN_DOT:
+                anaRes.push_back({"undefined", buffer});
+                break;
+            case STATE::OPEN_QUOTE:
+                anaRes.push_back({"string", buffer});
+                break;
+            case STATE::FLOAT:
+                anaRes.push_back({"float", buffer});
+                break;
+            default:
+                anaRes.push_back({"undefined", buffer});
+                break;
+        }
     }
     buffer.clear();
 } 
@@ -93,16 +111,12 @@ static STATE letterCase(STATE curState, char input, string &buffer, vector<token
         case INPUT_TYPE::LETTER_INPUT:
             buffer += input;
             return STATE::LETTER;
-            break;
         case INPUT_TYPE::NUMBER_INPUT:
             buffer += input;
             return STATE::LETTER;
-            break;
         default:
             operation(curState, buffer, anaRes);
-            curState = STATE::SYMBOL;
-            return symbolCase(curState, input, buffer, anaRes);
-            break;
+            return findNext(STATE::INIT, input, buffer, anaRes);
     }
 }
 
@@ -111,13 +125,14 @@ static STATE numberCase(STATE curState, char input, string &buffer, vector<token
     //number or wrong.
     switch(findInputType(input)) {
         case INPUT_TYPE::NUMBER_INPUT:
+            buffer += input;
             return STATE::NUM;
-            break;
+        case INPUT_TYPE::DOT_INPUT:
+            buffer += input;
+            return STATE::OPEN_DOT;
         default:
             operation(curState, buffer, anaRes);
-            curState = STATE::SYMBOL;
-            return symbolCase(curState, input, buffer, anaRes);
-            break;
+            return findNext(STATE::INIT, input, buffer, anaRes);
     }
 }
 
@@ -136,13 +151,47 @@ static STATE symbolCase(STATE curState, char input, string &buffer, vector<token
             return STATE::SYMBOL;
             break;
         default:
-            if (buffer.size() == 0) {
-                buffer += input;
-            }
             operation(curState, buffer, anaRes);
-            curState = STATE::INIT;
-            return findNext(curState, input, buffer, anaRes);
+            return findNext(STATE::INIT, input, buffer, anaRes);
             break;
+    }
+}
+
+static STATE openDotCase(STATE curState, char input, string &buffer, vector<token> &anaRes)
+{
+    switch(findInputType(input)) {
+        case INPUT_TYPE::NUMBER_INPUT:
+            buffer += input;
+            return STATE::FLOAT;
+        default:
+            operation(curState, buffer, anaRes);
+            return findNext(STATE::INIT, input, buffer, anaRes);
+    }
+}
+
+static STATE openQuoteCase(STATE curState, char input, string &buffer, vector<token> &anaRes)
+{
+    switch(findInputType(input)) {
+        case INPUT_TYPE::QUOTE_INPUT:
+            buffer += input;
+            operation(curState, buffer, anaRes);
+            return STATE::INIT;
+        default:
+            buffer += input;
+            return STATE::OPEN_QUOTE;
+    }
+}
+
+static STATE floatCase(STATE curState, char input, string &buffer, vector<token> &anaRes)
+{
+    switch(findInputType(input)) {
+        case INPUT_TYPE::NUMBER_INPUT:
+            buffer += input;
+            return STATE::FLOAT;
+            break;
+        default:
+            operation(curState, buffer, anaRes);
+            return findNext(STATE::INIT, input, buffer, anaRes);
     }
 }
 
@@ -157,29 +206,28 @@ STATE findNext(STATE curState, char input, string &buffer, vector<token> &anaRes
         switch(findInputType(input)) {
             case LETTER_INPUT:
                 return STATE::LETTER;
-                break;
             case NUMBER_INPUT:
                 return STATE::NUM;
-                break;
-            case SYMBOL_INPUT:
-                return STATE::SYMBOL;
-                break;
+            case QUOTE_INPUT:
+                return STATE::OPEN_QUOTE;
             default:
-                return STATE::INIT;
-                break;
+                return STATE::SYMBOL;
         }
     }
     else {
         switch(curState) {
             case STATE::LETTER:
                 return letterCase(curState, input, buffer, anaRes);
-                break;
             case STATE::NUM:
                 return numberCase(curState, input, buffer, anaRes);
-                break;
             case STATE::SYMBOL:
                 return symbolCase(curState, input, buffer, anaRes);
-                break;
+            case STATE::OPEN_DOT:
+                return openDotCase(curState, input, buffer, anaRes);
+            case STATE::OPEN_QUOTE:
+                return openQuoteCase(curState, input, buffer, anaRes);
+            case STATE::FLOAT:
+                return floatCase(curState, input, buffer, anaRes);
             default:
                 return STATE::INIT;
                 break;

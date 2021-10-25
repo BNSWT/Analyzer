@@ -7,6 +7,8 @@
 
 int main() 
 {
+    char s[] = "abc";
+    double d = 1.2;
     int xVariable=1, y = 2;
     int z = 0;
     if (xVariable < y){

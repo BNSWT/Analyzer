@@ -1,8 +1,20 @@
 <reserved word, int>
 <reserved word, main>
-<divider symbol, (>
-<divider symbol, )>
-<divider symbol, {>
+<bracket symbol, (>
+<bracket symbol, )>
+<bracket symbol, {>
+<identifier, char>
+<identifier, s>
+<bracket symbol, [>
+<bracket symbol, ]>
+<assign symbol, =>
+<string, "abc">
+<delimeter symbol, ;>
+<reserved word, double>
+<identifier, d>
+<assign symbol, =>
+<float, 12>
+<delimeter symbol, ;>
 <reserved word, int>
 <identifier, xVariable>
 <assign symbol, =>
@@ -18,43 +30,43 @@
 <number, 0>
 <delimeter symbol, ;>
 <reserved word, if>
-<divider symbol, (>
+<bracket symbol, (>
 <identifier, xVariable>
-<assign symbol, <>
+<calculator symbol, <>
 <identifier, y>
-<divider symbol, )>
-<divider symbol, {>
+<bracket symbol, )>
+<bracket symbol, {>
 <identifier, z>
 <assign symbol, =>
 <identifier, y>
-<assign symbol, />
+<calculator symbol, />
 <identifier, xVariable>
 <delimeter symbol, ;>
-<divider symbol, }>
+<bracket symbol, }>
 <reserved word, else>
-<divider symbol, {>
+<bracket symbol, {>
 <identifier, z>
 <assign symbol, =>
 <identifier, xVariable>
-<assign symbol, *>
+<calculator symbol, *>
 <identifier, y>
 <delimeter symbol, ;>
-<divider symbol, }>
+<bracket symbol, }>
 <reserved word, while>
-<divider symbol, (>
+<bracket symbol, (>
 <identifier, z>
-<assign symbol, !=>
+<calculator symbol, !=>
 <number, 0>
-<divider symbol, )>
-<divider symbol, {>
+<bracket symbol, )>
+<bracket symbol, {>
 <identifier, z>
 <assign symbol, =>
 <identifier, z>
-<assign symbol, +>
+<calculator symbol, +>
 <identifier, xVariable>
 <delimeter symbol, ;>
-<divider symbol, }>
+<bracket symbol, }>
 <reserved word, return>
 <number, 0>
 <delimeter symbol, ;>
-<divider symbol, }>
+<bracket symbol, }>
