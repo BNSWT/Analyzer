@@ -319,7 +319,7 @@ const string doubleSymbol[] = {
 };
 
 struct token{
-    int type;
+    enum TYPE type;
     string value;
 };
 

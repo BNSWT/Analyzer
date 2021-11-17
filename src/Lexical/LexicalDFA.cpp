@@ -43,7 +43,7 @@ static SYMBOL_TYPE findSymbolType(char input)
 
 static bool lookUp(string &item, vector<token> &anaRes)
 {
-    for (int type = TYPE::HEAD; type < TYPE::TAIL; type++){
+    for (enum TYPE type = TYPE::HEAD; type < TYPE::TAIL; type = (enum TYPE)(type+1)){
         const string *dict = dicts[type];
         const string dictName = names[type];
         for (int i = 0; dict[i]!=""; i++) {
