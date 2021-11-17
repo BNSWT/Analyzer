@@ -41,13 +41,17 @@ static SYMBOL_TYPE findSymbolType(char input)
     return SYMBOL_TYPE::NOT_INCLUDED;
 }
 
-static bool lookUp(const string dict[], const char* dictName, string &item, vector<token> &anaRes)
+static bool lookUp(string &item, vector<token> &anaRes)
 {
-    for (int i = 0; dict[i]!=""; i++) {
-        if (item==dict[i]) {
-            anaRes.push_back({dictName, item});
-            item.clear();
-            return true;
+    for (int type = TYPE::HEAD; type < TYPE::TAIL; type++){
+        const string *dict = dicts[type];
+        const string dictName = names[type];
+        for (int i = 0; dict[i]!=""; i++) {
+            if (item==dict[i]) {
+                anaRes.push_back({type, item});
+                item.clear();
+                return true;
+            }
         }
     }
     return false;
@@ -58,46 +62,36 @@ void operation(STATE curState, string &buffer, vector<token> &anaRes)
     if (buffer.size()){
         switch(curState) {
             case STATE::LETTER:
-                if(lookUp(reservedWords, "reserved word",buffer, anaRes))
+                if(lookUp(buffer, anaRes))
                     return;
                 for (int i =0; i < (int)buffer.size(); i++) {
                     if (findInputType(buffer[i])==INPUT_TYPE::SYMBOL_INPUT) {
-                        anaRes.push_back({"undefined", buffer});
+                        anaRes.push_back({TYPE::UNDEFINED, buffer});
                         buffer.clear();
                         return;
                     }
                 }
-                anaRes.push_back({"identifier", buffer});
+                anaRes.push_back({TYPE::ID, buffer});
                 break;
             case STATE::NUM:
-                anaRes.push_back({"number", buffer});
+                anaRes.push_back({TYPE::INTEGER, buffer});
                 break;
             case STATE::SYMBOL:
-                if(lookUp(assign, "assign symbol",buffer, anaRes))
+                if(lookUp(buffer, anaRes))
                     return;
-                if(lookUp(calculator, "calculator symbol",buffer, anaRes))
-                    return;
-                if(lookUp(delimeter, "delimeter symbol",buffer, anaRes))
-                    return;
-                if(lookUp(divider, "divider symbol",buffer, anaRes))
-                    return;
-                if(lookUp(bracket, "bracket symbol",buffer, anaRes))
-                    return;
-                if(lookUp(other, "other symbol", buffer, anaRes))
-                    return;
-                anaRes.push_back({"undefined", buffer});
+                anaRes.push_back({TYPE::UNDEFINED, buffer});
                 break;
             case STATE::OPEN_DOT:
-                anaRes.push_back({"undefined", buffer});
+                anaRes.push_back({TYPE::UNDEFINED, buffer});
                 break;
             case STATE::OPEN_QUOTE:
-                anaRes.push_back({"string", buffer});
+                anaRes.push_back({TYPE::UNDEFINED, buffer});
                 break;
             case STATE::FLOAT:
-                anaRes.push_back({"float", buffer});
+                anaRes.push_back({TYPE::FLOAT, buffer});
                 break;
             default:
-                anaRes.push_back({"undefined", buffer});
+                anaRes.push_back({TYPE::UNDEFINED, buffer});
                 break;
         }
     }

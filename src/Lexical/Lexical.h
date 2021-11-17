@@ -10,6 +10,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <iomanip>
 
 using namespace std;
 
@@ -25,13 +26,42 @@ enum STATE{
 };
 
 enum TYPE{
-    RESERVED_WORD,
-    IDENTIFIER,
-    NUMBER,
+    HEAD,
+    WELL,
+    INCLUDE,
+    CHAR,
+    TYPE,
+    MAIN,
+    DIVIDER,
+    DELIMETER,
+    L_BIG_BRACKET,
+    R_BIG_BRACKET,
+    L_MID_BRACKET,
+    R_MID_BRACKET,
+    L_SMA_BRACKET,
+    R_SMA_BRACKET,
+    L_SHA_BRACKET,
+    R_SHA_BRACKET,
+    ADDSUB,
+    PLUSDIV,
+    COMP,
+    EXCLAINMATION,
+    LOGIC,
+    WAVE,
+    BIT,
+    IF,
+    ELSE,
+    WHILE,
+    RETURN,
     ASSIGN,
-    CALCULATOR, 
-    DELIMITER,
-    DIVIDER
+    CAL_ASSIGN,
+    INTEGER,
+    FLOAT,
+    CHARACTER,
+    STRING,
+    ID,
+    UNDEFINED,
+    TAIL
 };
 
 enum INPUT_TYPE{
@@ -48,82 +78,204 @@ enum SYMBOL_TYPE{
     NOT_INCLUDED
 };
 
-const string assign[] = {
-    "=",
-    "+=",
-    "-=",
-    "*=",
-    "/=",
-    ""
+const string dicts[][10] = {
+    //HEAD,
+    {},
+    //WELL,
+    {
+        "#",
+        ""
+    },
+    //INCLUDE,
+    {
+        "include",
+        ""
+    },
+    //CHAR,
+    {
+        "char",
+        ""
+    },
+    //TYPE,
+    {
+        "float",
+        "double",
+        "int",
+        ""
+    },
+    //MAIN,
+    {
+        "main",
+        ""
+    },
+    //DIVIDER,
+    {
+        ",",
+        ""
+    },
+    //DELIMETER,
+    {
+        ";",
+        ""
+    },
+    //L_BIG_BRACKET,
+    {
+        "{",
+        ""
+    },
+    //R_BIG_BRACKET,
+    {
+        "}",
+        ""
+    },
+    //L_MID_BRACKET,
+    {
+        "[",
+        ""
+    },
+    //R_MID_BRACKET,
+    {
+        "]",
+        ""
+    },
+    //L_SMA_BRACKET,
+    {
+        "(",
+        ""
+    },
+    //R_SMA_BRACKET,
+    {
+        ")",
+        ""
+    },
+    //L_SHA_BRACKET,
+    {
+        "<",
+        ""
+    },
+    //R_SHA_BRACKET,
+    {
+        ">",
+        ""
+    },
+    //ADDSUB,
+    {
+        "+",
+        "-",
+        ""
+    },
+    //PLUSDIV,
+    {
+        "*",
+        "/",
+        ""
+    },
+    //COMP,
+    {
+        ">",
+        "<",
+        ">=",
+        "<=",
+        "==",
+        "!=",
+        ""
+    },
+    //EXCLAINMATION,
+    {
+        "!",
+        ""
+    },
+    //LOGIC,
+    {
+        "&&",
+        "||",
+        ""
+    },
+    //WAVE,
+    {
+        "~",
+        ""
+    },
+    //BIT,
+    {
+        "&",
+        "|",
+        "<<"
+        ">>",
+        ""
+    },
+    //IF,
+    {
+        "if",
+        ""
+    },
+    //ELSE,
+    {
+        "else",
+        ""
+    },
+    //WHILE,
+    {
+        "while",
+        ""
+    },
+    //RETURN,
+    {
+        "return",
+        ""
+    },
+    //"ASSIGN",
+    {
+        "=",
+        ""
+    },
+    //"CAL_ASSIGN",
+    {
+        "+=",
+        "-=",
+        "*=",
+        "/=",
+        ""
+    }
 };
 
-const string calculator[]={
-    //calculate
-    "+",
-    "-",
-    "*",
-    "/",
-    "++",
-    "--",
-    //compare
-    ">",
-    "<",
-    ">=",
-    "<=",
-    "==",
-    "!=",
-    //logic
-    "&&",
-    "||",
-    "!",
-    // bit calculate
-    "~",
-    "&",
-    "|",
-    "<<",
-    ">>",
-
-    ""
-};
-
-const string delimeter[] = {
-    ";",
-    ""
-};
-
-const string divider[]={
-    ",",
-    ""
-};
-
-const string bracket[]={
-    "(",
-    ")",
-    "{",
-    "}",
-    "[",
-    "]",
-    ""
-};
-
-const string other[] = {
-    "#",
-    ""
-};
-
-const string reservedWords[] = {
-    "float",
-    "double",
-    "int",
-    "void",
-    "char"
-    
-    "main",
-    
-    "if",
-    "else",
-    "while",
-    "return",
+const string names[]={
+    "",
+    "WELL",
+    "INCLUDE",
+    "CHAR",
+    "TYPE",
+    "MAIN",
+    "DIVIDER",
+    "DELIMETER",
+    "L_BIG_BRACKET",
+    "R_BIG_BRACKET",
+    "L_MID_BRACKET",
+    "R_MID_BRACKET",
+    "L_SMA_BRACKET",
+    "R_SMA_BRACKET",
+    "L_SHA_BRACKET",
+    "R_SHA_BRACKET",
+    "ADDSUB",
+    "PLUSDIV",
+    "COMP",
+    "EXCLAINMATION",
+    "LOGIC",
+    "WAVE",
+    "BIT",
+    "IF",
+    "ELSE",
+    "WHILE",
+    "RETURN",
+    "ASSIGN",
+    "CAL_ASSIGN",
+    "INTEGER",
+    "FLOAT",
+    "CHARACTER",
+    "STRING",
+    "ID",
+    "UNDEFINED",
+    "TAIL"
     ""
 };
 
@@ -132,9 +284,13 @@ const char mustSingleSymbol[] = {
     '}',
     '(',
     ')',
+    '<',
+    '>',
+    '[',
+    ']',
     ',',
     ';',
-    0
+    '~'
 };
 
 const char mayDoubleSymbol[] = {
@@ -146,19 +302,24 @@ const char mayDoubleSymbol[] = {
     '>',
     '<',
     '!',
-    0
+    '&',
+    '|',
 };
 
 const string doubleSymbol[] = {
     "==",
     ">=",
     "<=",
-    "!=" ,
+    "!=",
+    "+=",
+    "-=",
+    "*=",
+    "/=",
     ""
 };
 
 struct token{
-    string type;
+    int type;
     string value;
 };
 

@@ -50,7 +50,7 @@ void MainWindow::on_pushButton_Lexical_clicked()
     ui->listView->setFlow(QListView::TopToBottom);
     QStandardItemModel* ListModel = new QStandardItemModel();
     for (vector<token>::iterator it = res.begin(); it < res.end(); it++) {
-        string newItemStr = it->type+"\t"+it->value;
+        string newItemStr = names[it->type]+"\t"+it->value;
         QString newItem(newItemStr.c_str());
         QStandardItem* Items = new QStandardItem(newItem);
         ListModel->appendRow(Items);
