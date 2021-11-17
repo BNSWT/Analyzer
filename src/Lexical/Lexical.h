@@ -112,19 +112,11 @@ const string other[] = {
 };
 
 const string reservedWords[] = {
-    "string",
     "float",
     "double",
     "int",
     "void",
     "char"
-
-    "include",
-    "iostream",
-
-    "using",
-    "namespace",
-    "std",
     
     "main",
     
