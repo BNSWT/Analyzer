@@ -635,8 +635,8 @@
 	"kind" : "cmakeFiles",
 	"paths" : 
 	{
-		"build" : "/home/yuyangz/Documents/courses/compilation/AnalyzerQT/Analyzer/build",
-		"source" : "/home/yuyangz/Documents/courses/compilation/AnalyzerQT/Analyzer"
+		"build" : "/home/yuyangz/Documents/courses/compilation/Analyzer/build",
+		"source" : "/home/yuyangz/Documents/courses/compilation/Analyzer"
 	},
 	"version" : 
 	{

@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/yuyangz/Documents/courses/compilation/AnalyzerQT/Analyzer
+CMAKE_SOURCE_DIR = /home/yuyangz/Documents/courses/compilation/Analyzer
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/yuyangz/Documents/courses/compilation/AnalyzerQT/Analyzer/build
+CMAKE_BINARY_DIR = /home/yuyangz/Documents/courses/compilation/Analyzer/build
 
 # Utility rule file for Analyzer_autogen.
 
@@ -67,8 +67,8 @@ include CMakeFiles/Analyzer_autogen.dir/compiler_depend.make
 include CMakeFiles/Analyzer_autogen.dir/progress.make
 
 CMakeFiles/Analyzer_autogen:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/yuyangz/Documents/courses/compilation/AnalyzerQT/Analyzer/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC and UIC for target Analyzer"
-	/usr/bin/cmake -E cmake_autogen /home/yuyangz/Documents/courses/compilation/AnalyzerQT/Analyzer/build/CMakeFiles/Analyzer_autogen.dir/AutogenInfo.json Debug
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/yuyangz/Documents/courses/compilation/Analyzer/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC and UIC for target Analyzer"
+	/usr/bin/cmake -E cmake_autogen /home/yuyangz/Documents/courses/compilation/Analyzer/build/CMakeFiles/Analyzer_autogen.dir/AutogenInfo.json Debug
 
 Analyzer_autogen: CMakeFiles/Analyzer_autogen
 Analyzer_autogen: CMakeFiles/Analyzer_autogen.dir/build.make
@@ -83,6 +83,6 @@ CMakeFiles/Analyzer_autogen.dir/clean:
 .PHONY : CMakeFiles/Analyzer_autogen.dir/clean
 
 CMakeFiles/Analyzer_autogen.dir/depend:
-	cd /home/yuyangz/Documents/courses/compilation/AnalyzerQT/Analyzer/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/yuyangz/Documents/courses/compilation/AnalyzerQT/Analyzer /home/yuyangz/Documents/courses/compilation/AnalyzerQT/Analyzer /home/yuyangz/Documents/courses/compilation/AnalyzerQT/Analyzer/build /home/yuyangz/Documents/courses/compilation/AnalyzerQT/Analyzer/build /home/yuyangz/Documents/courses/compilation/AnalyzerQT/Analyzer/build/CMakeFiles/Analyzer_autogen.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/yuyangz/Documents/courses/compilation/Analyzer/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/yuyangz/Documents/courses/compilation/Analyzer /home/yuyangz/Documents/courses/compilation/Analyzer /home/yuyangz/Documents/courses/compilation/Analyzer/build /home/yuyangz/Documents/courses/compilation/Analyzer/build /home/yuyangz/Documents/courses/compilation/Analyzer/build/CMakeFiles/Analyzer_autogen.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/Analyzer_autogen.dir/depend
 

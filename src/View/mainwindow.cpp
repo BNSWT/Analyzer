@@ -45,7 +45,7 @@ void MainWindow::on_pushButton_Lexical_clicked()
 {
     QMessageBox::information(this, "My Tittle", "Hello World!");
     QString input = ui->textEdit->toPlainText();
-    vector<token> res = mainProcess(input.toStdString());
+    vector<token> res = lexicalProcess(input.toStdString());
 
     ui->listView->setFlow(QListView::TopToBottom);
     QStandardItemModel* ListModel = new QStandardItemModel();

@@ -26,7 +26,7 @@ enum STATE{
 };
 
 enum TYPE{
-    HEAD,
+    HEAD,//also means epsilon
     WELL,
     INCLUDE,
     CHAR,
@@ -55,10 +55,11 @@ enum TYPE{
     RETURN,
     ASSIGN,
     CAL_ASSIGN,
+    SELF,
     INTEGER,
-    FLOAT,
+    FLOAT_VALUE,
     CHARACTER,
-    STRING,
+    STRING_VALUE,
     ID,
     UNDEFINED,
     TAIL
@@ -73,7 +74,7 @@ enum INPUT_TYPE{
 };
 
 enum SYMBOL_TYPE{
-    MUST_SINGLE, 
+    MUST_SINGLE,
     MAY_DOUBLE,
     NOT_INCLUDED
 };
@@ -236,6 +237,12 @@ const string dicts[][10] = {
         "*=",
         "/=",
         ""
+    },
+    //"SELF"
+    {
+        "++",
+        "--",
+        ""
     }
 };
 
@@ -269,6 +276,7 @@ const string names[]={
     "RETURN",
     "ASSIGN",
     "CAL_ASSIGN",
+    "SELF",
     "INTEGER",
     "FLOAT",
     "CHARACTER",
@@ -323,5 +331,5 @@ struct token{
     string value;
 };
 
-vector<token> mainProcess(string source);
+vector<token> lexicalProcess(string source);
 void fileProcess(const char* inputPath, const char* outputPath);

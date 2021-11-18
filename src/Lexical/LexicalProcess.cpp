@@ -51,7 +51,7 @@ static void deFormat(string &source)
     return;
 }
 
-vector<token> mainProcess(string source)
+vector<token> lexicalProcess(string source)
 {
     deFormat(source);
     //cout << source << endl;
@@ -82,7 +82,7 @@ void fileProcess(const char* inputPath, const char* outputPath)
     file = data;
     infile.close();
 
-    vector<token> anaRes = mainProcess(file);
+    vector<token> anaRes = lexicalProcess(file);
 
     ofstream outfile;
     outfile.open(outputPath);

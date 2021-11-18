@@ -1,5 +1,5 @@
-/home/yuyangz/Documents/courses/compilation/AnalyzerQT/Analyzer/build/Analyzer_autogen/GT66W5ZSTU/moc_mainwindow.cpp: /home/yuyangz/Documents/courses/compilation/AnalyzerQT/Analyzer/src/View/mainwindow.h \
-  /home/yuyangz/Documents/courses/compilation/AnalyzerQT/Analyzer/build/Analyzer_autogen/moc_predefs.h \
+/home/yuyangz/Documents/courses/compilation/Analyzer/build/Analyzer_autogen/GT66W5ZSTU/moc_mainwindow.cpp: /home/yuyangz/Documents/courses/compilation/Analyzer/src/View/mainwindow.h \
+  /home/yuyangz/Documents/courses/compilation/Analyzer/build/Analyzer_autogen/moc_predefs.h \
   /usr/include/asm-generic/errno-base.h \
   /usr/include/asm-generic/errno.h \
   /usr/include/asm/errno.h \

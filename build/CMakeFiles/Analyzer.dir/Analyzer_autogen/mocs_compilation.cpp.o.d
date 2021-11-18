@@ -1,7 +1,7 @@
 CMakeFiles/Analyzer.dir/Analyzer_autogen/mocs_compilation.cpp.o: \
- /home/yuyangz/Documents/courses/compilation/AnalyzerQT/Analyzer/build/Analyzer_autogen/mocs_compilation.cpp \
+ /home/yuyangz/Documents/courses/compilation/Analyzer/build/Analyzer_autogen/mocs_compilation.cpp \
  /usr/include/stdc-predef.h \
- /home/yuyangz/Documents/courses/compilation/AnalyzerQT/Analyzer/build/Analyzer_autogen/GT66W5ZSTU/moc_mainwindow.cpp \
+ /home/yuyangz/Documents/courses/compilation/Analyzer/build/Analyzer_autogen/GT66W5ZSTU/moc_mainwindow.cpp \
  /usr/include/c++/11.1.0/memory \
  /usr/include/c++/11.1.0/bits/stl_algobase.h \
  /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/c++config.h \
@@ -100,7 +100,7 @@ CMakeFiles/Analyzer.dir/Analyzer_autogen/mocs_compilation.cpp.o: \
  /usr/include/c++/11.1.0/bits/atomic_base.h \
  /usr/include/c++/11.1.0/bits/atomic_lockfree_defines.h \
  /usr/include/c++/11.1.0/backward/auto_ptr.h \
- /home/yuyangz/Documents/courses/compilation/AnalyzerQT/Analyzer/build/Analyzer_autogen/GT66W5ZSTU/../../../src/View/mainwindow.h \
+ /home/yuyangz/Documents/courses/compilation/Analyzer/build/Analyzer_autogen/GT66W5ZSTU/../../../src/View/mainwindow.h \
  /usr/include/qt/QtWidgets/QMainWindow \
  /usr/include/qt/QtWidgets/qmainwindow.h \
  /usr/include/qt/QtWidgets/qtwidgetsglobal.h \

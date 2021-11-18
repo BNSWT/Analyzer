@@ -88,7 +88,7 @@ void operation(STATE curState, string &buffer, vector<token> &anaRes)
                 anaRes.push_back({TYPE::UNDEFINED, buffer});
                 break;
             case STATE::FLOAT:
-                anaRes.push_back({TYPE::FLOAT, buffer});
+                anaRes.push_back({TYPE::FLOAT_VALUE, buffer});
                 break;
             default:
                 anaRes.push_back({TYPE::UNDEFINED, buffer});

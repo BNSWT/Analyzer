@@ -1,7 +1,7 @@
 CMakeFiles/Analyzer.dir/src/View/main.cpp.o: \
- /home/yuyangz/Documents/courses/compilation/AnalyzerQT/Analyzer/src/View/main.cpp \
+ /home/yuyangz/Documents/courses/compilation/Analyzer/src/View/main.cpp \
  /usr/include/stdc-predef.h \
- /home/yuyangz/Documents/courses/compilation/AnalyzerQT/Analyzer/src/View/mainwindow.h \
+ /home/yuyangz/Documents/courses/compilation/Analyzer/src/View/mainwindow.h \
  /usr/include/qt/QtWidgets/QMainWindow \
  /usr/include/qt/QtWidgets/qmainwindow.h \
  /usr/include/qt/QtWidgets/qtwidgetsglobal.h \

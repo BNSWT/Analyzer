@@ -11,7 +11,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/yuyangz/Documents/courses/compilation/AnalyzerQT/Analyzer/build"
+			"value" : "/home/yuyangz/Documents/courses/compilation/Analyzer/build"
 		},
 		{
 			"name" : "Analyzer_IS_TOP_LEVEL",
@@ -35,7 +35,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/yuyangz/Documents/courses/compilation/AnalyzerQT/Analyzer"
+			"value" : "/home/yuyangz/Documents/courses/compilation/Analyzer"
 		},
 		{
 			"name" : "CMAKE_ADDR2LINE",
@@ -91,7 +91,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/yuyangz/Documents/courses/compilation/AnalyzerQT/Analyzer/build"
+			"value" : "/home/yuyangz/Documents/courses/compilation/Analyzer/build"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -527,7 +527,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/yuyangz/Documents/courses/compilation/AnalyzerQT/Analyzer"
+			"value" : "/home/yuyangz/Documents/courses/compilation/Analyzer"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
