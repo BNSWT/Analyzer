@@ -5,9 +5,9 @@
 
 #include"../Lexical/Lexical.h"
 #include <stack>
+#include <map>
 
-#define TERMINATOR_NUM 36
-#define SYNTAX_STATE_NUM 19
+#define GRAMMAR_SIZE 49
 
 enum SYNTAX_STATE{
     SBEG,
@@ -46,18 +46,29 @@ enum GOTO_ELEM_TYPE{
 struct rightElem{
     RIGHT_ELEM_TYPE type;
     int index;
+    bool operator == (const rightElem & r ) {
+        return type == r.type && index == r.index;
+    }
+    bool operator != (const rightElem & r ) {
+        return type != r.type || index != r.index;
+    }
 };
 
-struct formula{
-    SYNTAX_STATE left;
+// struct formula{
+//     SYNTAX_STATE left;
+//     vector<rightElem> right;
+// };
+
+typedef multimap<SYNTAX_STATE, vector<rightElem>> formulas ;
+
+
+struct projectRight{
+    // SYNTAX_STATE left;
     vector<rightElem> right;
-};
-
-struct project{
-    SYNTAX_STATE left;
-    rightElem right[20];
     int dotpos;
 };
+
+typedef multimap<SYNTAX_STATE, projectRight> projectSet;
 
 struct actionElem{
     enum GOTO_ELEM_TYPE gotoElemType;
@@ -97,7 +108,7 @@ const string stateNames[]={
     "V"
 };
 
-const formula grammar[]={
+const formulas grammar={
     {
         SYNTAX_STATE::SBEG,
         {
@@ -129,7 +140,6 @@ const formula grammar[]={
     {
         SYNTAX_STATE::O,
         {
-            {RIGHT_ELEM_TYPE::TERMINATER,TYPE::HEAD},
         }
     },
     {
@@ -146,7 +156,6 @@ const formula grammar[]={
     {
         SYNTAX_STATE::I,
         {
-            {RIGHT_ELEM_TYPE::TERMINATER,TYPE::HEAD},
         }
     },
     {
@@ -209,7 +218,6 @@ const formula grammar[]={
     {
         SYNTAX_STATE::D,
         {
-            {RIGHT_ELEM_TYPE::TERMINATER,TYPE::HEAD},
         }
     },
     {
@@ -222,7 +230,6 @@ const formula grammar[]={
     {
         SYNTAX_STATE::B,
         {
-            {RIGHT_ELEM_TYPE::TERMINATER,TYPE::HEAD},
         }
     },
     {
@@ -236,7 +243,6 @@ const formula grammar[]={
     {
         SYNTAX_STATE::T,
         {
-            {RIGHT_ELEM_TYPE::TERMINATER,TYPE::HEAD},
         }
     },
     {
@@ -255,7 +261,6 @@ const formula grammar[]={
     {
         SYNTAX_STATE::F,
         {
-            {RIGHT_ELEM_TYPE::TERMINATER,TYPE::HEAD},
         }
     },
     {
