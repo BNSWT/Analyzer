@@ -1,13 +1,16 @@
+#pragma once
 /*
  * Created Date: 2021-11-17 09:20:03
  * Author: yuyangz
  */
 
+#ifndef  PARSER_H
+#define  PARSER_H
+
 #include"../Lexical/Lexical.h"
 #include <stack>
 #include <map>
 
-#define GRAMMAR_SIZE 49
 
 enum SYNTAX_STATE{
     SBEG,
@@ -46,12 +49,6 @@ enum GOTO_ELEM_TYPE{
 struct rightElem{
     RIGHT_ELEM_TYPE type;
     int index;
-    bool operator == (const rightElem & r ) {
-        return type == r.type && index == r.index;
-    }
-    bool operator != (const rightElem & r ) {
-        return type != r.type || index != r.index;
-    }
 };
 
 // struct formula{
@@ -78,7 +75,7 @@ struct actionElem{
 struct analyzeProcess{
     stack<int> stateStack;
     stack<rightElem> symbolStack;
-    vector<enum TYPE> inputString;
+    vector<token> inputString;
 };
 
 typedef struct treeNode{
@@ -507,3 +504,7 @@ const formulas grammar={
         }
     }
 };
+
+void parserProcess(vector<token> inputString, vector<analyzeProcess> &parseProcess, analyzeTree &parseTree, string &errlog);
+
+#endif

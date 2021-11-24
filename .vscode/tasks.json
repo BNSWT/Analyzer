@@ -7,12 +7,13 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "${file}",
+                "${workspaceFolder}/src/Lexical/*.cpp",
+                "${workspaceFolder}/src/Parser/*.cpp",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"
             ],
             "options": {
-                "cwd": "${fileDirname}"
+                "cwd": "/home/yuyangz/Documents/courses/compilation/Analyzer/"
             },
             "problemMatcher": [
                 "$gcc"

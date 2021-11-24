@@ -1,7 +1,7 @@
 /*
  * Filename: /home/yuyangz/Documents/courses/compilation/Analyzer/.vscode/launch.json
  * Path: /home/yuyangz/Documents/courses/compilation/Analyzer/.vscode
- * Created Date: Wednesday, November 17th 2021, 10:38:53 am
+ * Created Date: Wednesday, November 24th 2021, 4:12:17 pm
  * Author: yuyangz
  * 
  * Copyright (c) 2021 yuyangz.
@@ -22,7 +22,7 @@
             "program": "${fileDirname}/${fileBasenameNoExtension}",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${fileDirname}",
+            "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",

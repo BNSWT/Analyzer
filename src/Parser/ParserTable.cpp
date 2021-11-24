@@ -55,6 +55,7 @@ projectSet closure(projectSet I, projectSet allProj)
             }
         }
     }while(newClos.size()!=clos.size());
+    return clos;
 }
 
 projectSet gotoFuc(projectSet cur, rightElem input, projectSet allProj)
@@ -98,6 +99,7 @@ vector<projectSet> generateDFA(projectSet allProj)
             }
         }
     }while(newDFA.size()!=DFA.size());
+    return DFA;
 }
 
 void initTable(vector<projectSet> &DFAstates, vector<vector<int>> &gotoTable, vector<vector<actionElem>> &actionTable)
@@ -132,8 +134,8 @@ int locateDFAstate(vector<projectSet> DFAstates, projectSet I)
             }
             auto subIter1 = iter1->second.right.begin();
             auto subIter2 = iter2->second.right.begin();
-            for (; subIter1<iter1->second.right.end() && subIter2<iter2->second.right.end(); subIter1++, subIter2++) {
-                if (*subIter1!=*subIter2) {
+            for (; subIter1!=iter1->second.right.end() && subIter2!=iter2->second.right.end(); subIter1++, subIter2++) {
+                if (subIter1->index!=subIter2->index || subIter1->type!=subIter2->type) {
                     found = false;
                     break;
                 }
@@ -150,9 +152,20 @@ int locateFormula(pair<SYNTAX_STATE, vector<rightElem>> formula)
     int cnt = 0;
     for (auto iter=grammar.begin(); iter != grammar.end(); iter++) {
         cnt++;
-        if (iter->first==formula.first && iter->second==formula.second) {
-            break;
+        if (iter->first!=formula.first) {
+            continue;
         }
+        auto gIter = iter->second.begin();
+        auto fIter = formula.second.begin();
+        bool found = true;
+        for (; gIter != iter->second.end() && fIter != formula.second.end(); gIter++, fIter++) {
+            if (gIter->index!=fIter->index || gIter->type!=fIter->type) {
+                found = false;
+                break;
+            }
+        }
+        if (found)
+            break;
     }
     return cnt;
 }

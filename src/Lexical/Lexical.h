@@ -4,6 +4,8 @@
  * Author: yuyangz
  */
 
+#ifndef LEXICAL_H
+#define LEXICAL_H
 #include <string>
 #include <vector>
 #include <cstring>
@@ -333,3 +335,5 @@ struct token{
 
 vector<token> lexicalProcess(string source);
 void fileProcess(const char* inputPath, const char* outputPath);
+
+#endif
