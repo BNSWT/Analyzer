@@ -1,0 +1,1 @@
+              state stack             symbol stack             input string

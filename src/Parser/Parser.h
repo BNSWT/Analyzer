@@ -67,6 +67,11 @@ struct projectRight{
 
 typedef multimap<SYNTAX_STATE, projectRight> projectSet;
 
+struct DFAstate{
+    int num;
+    projectSet pSet;
+};
+
 struct actionElem{
     enum GOTO_ELEM_TYPE gotoElemType;
     int des;
@@ -505,6 +510,7 @@ const formulas grammar={
     }
 };
 
-void parserProcess(vector<token> inputString, vector<analyzeProcess> &parseProcess, analyzeTree &parseTree, string &errlog);
 
+void parserProcess(vector<token> &inputString);
+void generateLRTable();
 #endif
