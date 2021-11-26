@@ -319,5 +319,12 @@ void generateLRTable()
     auto DFA=generateDFA();
     initActionTable(DFA);
     generateAction(DFA);
-    saveTable("data/Actiontable.txt", "data/GOTOtable.txt");
+    saveTable("Actiontable.txt", "GOTOtable.txt");
+}
+
+int main()
+{
+    generateLRTable();
+
+    return 0;
 }
