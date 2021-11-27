@@ -64,6 +64,7 @@ struct projectRight{
     // SYNTAX_STATE left;
     vector<rightElem> right;
     int dotpos;
+    enum TYPE look;
 };
 
 typedef multimap<SYNTAX_STATE, projectRight> projectSet;

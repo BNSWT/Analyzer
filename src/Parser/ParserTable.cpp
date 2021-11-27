@@ -90,22 +90,14 @@ static inline void getAllProjects()
             for (auto iter = pairIter.first; iter != pairIter.second; iter++) {
                 vector<rightElem> formula= iter->second;
                 for (int i=0; i<=formula.size(); i++) {
-                    projectRight pRight{formula, i};
-                    allProj.insert({synState, pRight});
+                    for (auto follow = followSets[{RIGHT_ELEM_TYPE::STATE, synState}].begin(); follow != followSets[{RIGHT_ELEM_TYPE::STATE, synState}].end(); follow++) {
+                        projectRight pRight{formula, i, *follow};
+                        allProj.insert({synState, pRight});
+                    }
                 }
             }
         }
     }
-}
-
-static inline projectSet formula2projects(pair<SYNTAX_STATE, vector<rightElem>> formula)
-{
-    projectSet set;
-    for (int i = 0; i < formula.second.size(); i++) {
-        projectRight pRight{formula.second, i};
-        set.insert({formula.first, pRight});
-    }
-    return set;
 }
 
 static inline bool in(projectSet &child, projectSet &parent)
@@ -129,6 +121,10 @@ static inline bool in(projectSet &child, projectSet &parent)
                     continue;
                 }
                 if (pairIter->second.dotpos!=childValue.dotpos){
+                    found = false;
+                    continue;
+                }
+                if (pairIter->second.look!=childValue.look){
                     found = false;
                     continue;
                 }
@@ -162,13 +158,24 @@ static inline projectSet closure(projectSet I)
             vector<rightElem> right = iter->second.right;
             if (dotpos < right.size() && right[dotpos].type==RIGHT_ELEM_TYPE::STATE) {
                 SYNTAX_STATE synState = (SYNTAX_STATE)right[dotpos].index;
+                //all projects begins with synState.
                 auto pairIter = allProj.equal_range(synState);
                 if (pairIter.first != allProj.end()){
                     for (auto chosenProj=pairIter.first; chosenProj != pairIter.second; chosenProj++) {
+                        //chosenProj is a project begins with synState.
                         projectSet set;
                         set.insert(*chosenProj);
                         bool subset=in(set ,clos);
-                        if (chosenProj->second.dotpos==0 && !subset){
+                        bool connected = false;
+                        if (dotpos+1 < right.size()){
+                            auto first=firstSets[{RIGHT_ELEM_TYPE::STATE,(SYNTAX_STATE)right[dotpos+1].index}];
+                            // chosen look in first.
+                            connected=(find(first.begin(), first.end(), chosenProj->second.look)!=first.end());
+                        }
+                        else {
+                            connected = (chosenProj->second.look==TYPE::HEAD);
+                        }
+                        if (chosenProj->second.dotpos==0 && !subset && connected){
                             newClos.insert(*chosenProj);
                         }
                     }
@@ -186,7 +193,7 @@ static inline projectSet gotoFuc(projectSet cur, rightElem input)
         int dotpos = iter->second.dotpos;
         vector<rightElem> right = iter->second.right;
         if (dotpos < right.size() && right[dotpos].type==input.type && right[dotpos].index == input.index) {
-            projectRight pRight{right, dotpos+1};
+            projectRight pRight{right, dotpos+1, iter->second.look};
             dest.insert({iter->first, pRight});
         }
     }
@@ -198,12 +205,13 @@ static inline int locateDFAstate(vector<DFAstate> DFAstates, projectSet I)
     auto stateIter=DFAstates.begin();
     bool found = false;
     for (; stateIter!=DFAstates.end(); stateIter++) {
+        // check if they are exactly the same.
         auto iter1=stateIter->pSet.begin();
         auto iter2=I.begin();
         found = true;
         for (; iter1 !=stateIter->pSet.end() && iter2 !=I.end(); iter1++, iter2++) {
             if (iter1->first!=iter2->first ||
-                iter1->second.dotpos!=iter2->second.dotpos) {
+                iter1->second.dotpos!=iter2->second.dotpos || iter1->second.look != iter2->second.look) {
                 found = false;
                 break;
             }
@@ -264,18 +272,11 @@ int gotoColNum(RIGHT_ELEM_TYPE rType, int index)
 static inline vector<DFAstate> generateDFA(vector<vector<int>> &gotoTable)
 {
     vector<DFAstate> DFA, newDFA;
-    projectSet init=
-    {
-        {
-            SYNTAX_STATE::SBEG,
-            {
-                {
-                    {RIGHT_ELEM_TYPE::STATE,SYNTAX_STATE::BEG}
-                },
-                0
-            }
-        }
-    };
+    rightElem initRight={RIGHT_ELEM_TYPE::STATE,SYNTAX_STATE::BEG};
+    auto follow=followSets[initRight];
+    projectSet init;
+    for (auto iter=follow.begin(); iter!=follow.end(); iter++)
+        init.insert({SYNTAX_STATE::SBEG,{{initRight}, 0, *iter}});
     int num = 0;
     newDFA.push_back({num, closure(init)});
     do {
@@ -333,13 +334,8 @@ static inline void generateAction(const vector<DFAstate> &DFA, vector<vector<int
             
             if(dotpos==right.size()) {
                 int nextFormulaNum = locateFormula({iter->first, iter->second.right});
-                for (int i =0;i<actionTable[0].size();i++){
-                    
-                    if (actionTable[curStateNum][i].gotoElemType==GOTO_ELEM_TYPE::ERR) {
-                        actionTable[curStateNum][i].gotoElemType = GOTO_ELEM_TYPE::INDUCE;
-                        actionTable[curStateNum][i].des=nextFormulaNum;
-                    }
-                } 
+                actionTable[curStateNum][iter->second.look].gotoElemType = GOTO_ELEM_TYPE::INDUCE;
+                actionTable[curStateNum][iter->second.look].des=nextFormulaNum;
             }
             else if (right[dotpos].type==RIGHT_ELEM_TYPE::TERMINATER) {
                 actionTable[curStateNum][right[dotpos].index].gotoElemType=GOTO_ELEM_TYPE::MOVE;
@@ -399,7 +395,6 @@ void generateLRTable(vector<vector<int>> &gotoTable, vector<vector<actionElem>> 
 {
     generateFirst();
     generateFollow();
-
     getAllProjects();
     auto DFA=generateDFA(gotoTable);
     initActionTable(DFA, actionTable);
