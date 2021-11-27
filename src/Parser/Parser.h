@@ -10,6 +10,7 @@
 #include"../Lexical/Lexical.h"
 #include <stack>
 #include <map>
+#include <sstream>
 
 
 enum SYNTAX_STATE{
@@ -511,6 +512,6 @@ const formulas grammar={
 };
 
 
-void parserProcess(vector<token> &inputString);
-void generateLRTable();
+void parserProcess(vector<token> &inputString, const vector<vector<int>> gotoTable, const vector<vector<actionElem>> actionTable);
+void generateLRTable(vector<vector<int>> &gotoTable, vector<vector<actionElem>> &actionTable);
 #endif

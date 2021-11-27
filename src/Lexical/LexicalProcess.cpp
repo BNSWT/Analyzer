@@ -91,7 +91,12 @@ void fileProcess(const char* inputPath, const char* outputPath)
     }
 
     for (vector<token>::iterator it = anaRes.begin(); it != anaRes.end(); it++) {
-        outfile << "<" << (*it).type  << ", "<< (*it).value << ">" << endl;
+        outfile << (*it).type  << " "<< (*it).value << endl;
     }
     outfile.close();
+}
+
+int main()
+{
+    fileProcess("/mnt/Data/Programming/my-wife/Analyzer/data/input_normal.cpp", "/mnt/Data/Programming/my-wife/Analyzer/data/output_normal.txt");
 }

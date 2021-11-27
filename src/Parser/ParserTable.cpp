@@ -6,8 +6,7 @@
 #include "Parser.h"
 
 static projectSet allProj;
-static vector<vector<int>> gotoTable;
-static vector<vector<actionElem>> actionTable;
+
 
 static inline void getAllProjects()
 {
@@ -172,7 +171,7 @@ static inline int locateFormula(pair<SYNTAX_STATE, vector<rightElem>> formula)
     return cnt;
 }
 
-static inline pair<SYNTAX_STATE, vector<rightElem>> findFormula(int cnt)
+pair<SYNTAX_STATE, vector<rightElem>> findFormula(int cnt)
 {
     auto iter=grammar.begin();
     for (int i = 0; i < cnt && iter != grammar.end(); iter++, i++)
@@ -188,7 +187,7 @@ int gotoColNum(RIGHT_ELEM_TYPE rType, int index)
         return index+20;
 }
 
-static inline vector<DFAstate> generateDFA()
+static inline vector<DFAstate> generateDFA(vector<vector<int>> &gotoTable)
 {
     vector<DFAstate> DFA, newDFA;
     projectSet init=
@@ -210,20 +209,26 @@ static inline vector<DFAstate> generateDFA()
         for (auto iter=DFA.begin(); iter!=DFA.end(); iter++) {
             for (SYNTAX_STATE synState = SYNTAX_STATE::SBEG; synState <= SYNTAX_STATE::V; synState=(SYNTAX_STATE)(synState+1)) {
                 auto nextSet = gotoFuc(iter->pSet, {RIGHT_ELEM_TYPE::STATE,synState});
-                if (nextSet.size()&&locateDFAstate(DFA,nextSet)==DFA.size()) {
-                    vector<int> gotoRow(60);
-                    gotoTable.push_back(gotoRow);
-                    newDFA.push_back({++num, nextSet});
-                    gotoTable[iter->num][gotoColNum(RIGHT_ELEM_TYPE::STATE, synState)]=num;
+                if (nextSet.size()) {
+                    int dest = locateDFAstate(DFA,nextSet);
+                    if (dest == DFA.size()) {
+                        vector<int> gotoRow(60);
+                        gotoTable.push_back(gotoRow);
+                        newDFA.push_back({++num, nextSet});
+                    }
+                    gotoTable[iter->num][gotoColNum(RIGHT_ELEM_TYPE::STATE, synState)]=dest;
                 }
             }
             for (enum TYPE type=TYPE::HEAD; type < TYPE::TAIL; type = (enum TYPE)(type+1)) {
                 auto nextSet = gotoFuc(iter->pSet, {RIGHT_ELEM_TYPE::TERMINATER,type});
-                if (nextSet.size()&&locateDFAstate(DFA,nextSet)==DFA.size()) {
-                    vector<int> gotoRow(60);
-                    gotoTable.push_back(gotoRow);
-                    newDFA.push_back({++num, nextSet});
-                    gotoTable[iter->num][gotoColNum(RIGHT_ELEM_TYPE::TERMINATER, type)]=num;
+                if (nextSet.size()) {
+                    int dest = locateDFAstate(DFA,nextSet);
+                    if (dest==DFA.size()) {
+                        vector<int> gotoRow(60);
+                        gotoTable.push_back(gotoRow);
+                        newDFA.push_back({++num, nextSet});
+                    }
+                    gotoTable[iter->num][gotoColNum(RIGHT_ELEM_TYPE::TERMINATER, type)]=dest;
                 }
             }
         }
@@ -231,18 +236,18 @@ static inline vector<DFAstate> generateDFA()
     return DFA;
 }
 
-static inline void initActionTable(const vector<DFAstate> DFA)
+static inline void initActionTable(const vector<DFAstate> DFA, vector<vector<actionElem>> &actionTable)
 {
     for (int i =0 ; i<DFA.size(); i++){
         vector<actionElem> actionRow;
-        for (SYNTAX_STATE synState = SYNTAX_STATE::SBEG; synState <= SYNTAX_STATE::V; synState=(SYNTAX_STATE)(synState+1)) {
+        for (enum TYPE type=TYPE::HEAD; type < TYPE::TAIL; type = (enum TYPE)(type+1)){
             actionRow.push_back({GOTO_ELEM_TYPE::ERR, -1});
         }
         actionTable.push_back(actionRow);
     } 
 }
 
-static inline void generateAction(const vector<DFAstate> &DFA)
+static inline void generateAction(const vector<DFAstate> &DFA, vector<vector<int>> &gotoTable, vector<vector<actionElem>> &actionTable)
 {
     long long x = 0;
     for (auto DFAstate=DFA.begin(); DFAstate!=DFA.end(); DFAstate++) {
@@ -267,7 +272,7 @@ static inline void generateAction(const vector<DFAstate> &DFA)
     }
 }
 
-static inline void saveTable(const char* actionPath, const char* gotoPath)
+static inline void saveTable(const char* actionPath, const char* gotoPath, const vector<vector<int>> gotoTable, const vector<vector<actionElem>> actionTable)
 {
     string outputPath = actionPath;
     ofstream outfile;
@@ -289,7 +294,7 @@ static inline void saveTable(const char* actionPath, const char* gotoPath)
                 outfile << "R" << actionTable[i][j].des << setw(18) << " ";
             } 
             else
-                outfile << setw(20) << " ";
+                outfile << "E"<< setw(29) << " ";
         }
         outfile << endl;
     }
@@ -313,18 +318,17 @@ static inline void saveTable(const char* actionPath, const char* gotoPath)
     outfile.close();
 }
 
-void generateLRTable()
+void generateLRTable(vector<vector<int>> &gotoTable, vector<vector<actionElem>> &actionTable)
 {
     getAllProjects();
-    auto DFA=generateDFA();
-    initActionTable(DFA);
-    generateAction(DFA);
-    saveTable("Actiontable.txt", "GOTOtable.txt");
+    auto DFA=generateDFA(gotoTable);
+    initActionTable(DFA, actionTable);
+    generateAction(DFA, gotoTable, actionTable);
+    saveTable("/mnt/Data/Programming/my-wife/Analyzer/data/Actiontable.txt", "/mnt/Data/Programming/my-wife/Analyzer/data/GOTOtable.txt", gotoTable, actionTable);
 }
 
-int main()
-{
-    generateLRTable();
-
-    return 0;
-}
+// int main()
+// {
+//     generateLRTable();
+//     return 0;
+// }

@@ -81,6 +81,9 @@ void operation(STATE curState, string &buffer, vector<token> &anaRes)
                     return;
                 anaRes.push_back({TYPE::UNDEFINED, buffer});
                 break;
+            case STATE::STRING:
+                anaRes.push_back({TYPE::STRING_VALUE, buffer});
+                break;
             case STATE::OPEN_DOT:
                 anaRes.push_back({TYPE::UNDEFINED, buffer});
                 break;
@@ -168,6 +171,7 @@ static STATE openQuoteCase(STATE curState, char input, string &buffer, vector<to
     switch(findInputType(input)) {
         case INPUT_TYPE::QUOTE_INPUT:
             buffer += input;
+            curState = STATE::STRING;
             operation(curState, buffer, anaRes);
             return STATE::INIT;
         default:
