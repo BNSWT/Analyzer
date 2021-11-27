@@ -6,8 +6,31 @@
 #include "Parser.h"
 #include <algorithm>
 static projectSet allProj;
-static map<rightElem, vector<enum TYPE>> firstSets;
-static map<rightElem, vector<enum TYPE>> followSets;
+static map<int, vector<enum TYPE>> firstSets;
+static map<int, vector<enum TYPE>> followSets;
+
+int gotoColNum(RIGHT_ELEM_TYPE type,int index)
+{   
+    if (type == RIGHT_ELEM_TYPE::STATE)
+        return index;
+    else
+        return index+20;
+}
+
+int gotoColNum(enum TYPE index)
+{
+    return index+20;
+}
+
+int gotoColNum(SYNTAX_STATE index)
+{
+    return index;
+}
+
+int gotoColNum(rightElem elem)
+{
+    return gotoColNum(elem.type, elem.index);
+}
 
 bool hasEmpty(rightElem elem)
 {
@@ -25,61 +48,68 @@ static inline void generateFirst()
 {
     //1.
     for (enum TYPE type=TYPE::HEAD; type < TYPE::TAIL; type = (enum TYPE)(type+1)) {
-        firstSets.insert({{RIGHT_ELEM_TYPE::TERMINATER, type}, {(enum TYPE)type}});
+        firstSets.insert({gotoColNum(type), {(enum TYPE)type}});
     }
     for (SYNTAX_STATE synState = SYNTAX_STATE::SBEG; synState <= SYNTAX_STATE::V; synState=(SYNTAX_STATE)(synState+1)) {
-        firstSets.insert({{RIGHT_ELEM_TYPE::STATE, synState},{}});
+        firstSets.insert({gotoColNum(synState),{}});
     }
-    bool updated=false;
+    auto newFirst=firstSets;
     do{
-        updated = false;
+        firstSets=newFirst;
         for(auto iter=grammar.begin(); iter!=grammar.end(); iter++) {
             //2.
             auto left = iter->first;
+            int leftIndex = gotoColNum(RIGHT_ELEM_TYPE::STATE,left);
+            if (iter->second.size()==0)
+                continue;
             auto rightIter = iter->second.begin();
+            int mapIndex=gotoColNum(rightIter->type, rightIter->index);
             do{
-                for (auto fir=firstSets[*rightIter].begin(); fir!=firstSets[*rightIter].end();fir++) {
-                    firstSets[{RIGHT_ELEM_TYPE::STATE,left}].push_back(*fir);
-                    updated=true;
+                for (auto fir=firstSets[mapIndex].begin(); fir!=firstSets[mapIndex].end();fir++) {
+                    // cout << *fir << endl;
+                    newFirst[leftIndex].push_back(*fir);
                 }
                 rightIter++;
             }while(hasEmpty(*rightIter));
             //3.
             if (iter->second.size()==0)
-                firstSets[{RIGHT_ELEM_TYPE::STATE,left}].push_back(TYPE::HEAD);
+                newFirst[leftIndex].push_back(TYPE::HEAD);
         }
-    }while(updated);
+    }while(firstSets.size()!=newFirst.size());
 }
 
 static inline void generateFollow()
 {
     // initialize
     for (enum TYPE type=TYPE::HEAD; type < TYPE::TAIL; type = (enum TYPE)(type+1)) {
-        firstSets.insert({{RIGHT_ELEM_TYPE::TERMINATER, type}, {}});
+        followSets.insert({gotoColNum(type), {}});
     }
     for (SYNTAX_STATE synState = SYNTAX_STATE::SBEG; synState <= SYNTAX_STATE::V; synState=(SYNTAX_STATE)(synState+1)) {
-        firstSets.insert({{RIGHT_ELEM_TYPE::STATE, synState},{}});
+        followSets.insert({gotoColNum(synState),{}});
     }
-    bool updated=false;
+    auto newFollow=followSets;
     do{
-        updated = false;
+        followSets = newFollow;
         for (auto iter = grammar.begin(); iter!=grammar.end(); iter++) {
             //2
-            for (auto rightIter = iter->second.begin()+1; rightIter!=iter->second.end(); iter++) {
-                for (auto firIter = firstSets[*(rightIter+1)].begin(); firIter!=firstSets[*(rightIter+1)].end(); firIter++) {
+            for (auto rightIter = iter->second.begin()+1; rightIter<iter->second.end(); rightIter++) {
+                int nextIndex = gotoColNum(*(rightIter+1));
+                for (auto firIter = firstSets[nextIndex].begin(); firIter!=firstSets[nextIndex].end(); firIter++) {
                     if (*firIter!=TYPE::HEAD)
-                        followSets[*rightIter].push_back(*firIter);
+                        newFollow[gotoColNum(*rightIter)].push_back(*firIter);
                 }
             }
             //3
+            if (iter->second.size()==0)
+                continue;
             auto tail = iter->second.end()-1;
-            if (find(firstSets[*tail].begin(), firstSets[*tail].end(), TYPE::HEAD)!=firstSets[*tail].end()){
-                for (auto lIter = firstSets[{RIGHT_ELEM_TYPE::STATE,iter->first}].begin(); lIter !=firstSets[{RIGHT_ELEM_TYPE::STATE,iter->first}].end(); lIter++) {
-                    firstSets[*tail].push_back(*lIter);
+            if (find(firstSets[gotoColNum(*tail)].begin(), firstSets[gotoColNum(*tail)].end(), TYPE::HEAD)!=firstSets[gotoColNum(*tail)].end()){
+                for (auto lIter = firstSets[gotoColNum(iter->first)].begin(); lIter !=firstSets[gotoColNum(iter->first)].end(); lIter++) {
+                    newFollow[gotoColNum(*tail)].push_back(*lIter);
                 }
             }
         }
-    }while(updated);
+    }while(newFollow.size()!=followSets.size());
 }
 
 static inline void getAllProjects()
@@ -90,7 +120,7 @@ static inline void getAllProjects()
             for (auto iter = pairIter.first; iter != pairIter.second; iter++) {
                 vector<rightElem> formula= iter->second;
                 for (int i=0; i<=formula.size(); i++) {
-                    for (auto follow = followSets[{RIGHT_ELEM_TYPE::STATE, synState}].begin(); follow != followSets[{RIGHT_ELEM_TYPE::STATE, synState}].end(); follow++) {
+                    for (auto follow = followSets[gotoColNum(synState)].begin(); follow != followSets[gotoColNum(synState)].end(); follow++) {
                         projectRight pRight{formula, i, *follow};
                         allProj.insert({synState, pRight});
                     }
@@ -168,7 +198,7 @@ static inline projectSet closure(projectSet I)
                         bool subset=in(set ,clos);
                         bool connected = false;
                         if (dotpos+1 < right.size()){
-                            auto first=firstSets[{RIGHT_ELEM_TYPE::STATE,(SYNTAX_STATE)right[dotpos+1].index}];
+                            auto first=firstSets[gotoColNum(right[dotpos+1])];
                             // chosen look in first.
                             connected=(find(first.begin(), first.end(), chosenProj->second.look)!=first.end());
                         }
@@ -261,19 +291,11 @@ pair<SYNTAX_STATE, vector<rightElem>> findFormula(int cnt)
     return *iter;
 }
 
-int gotoColNum(RIGHT_ELEM_TYPE rType, int index)
-{
-    if (rType ==RIGHT_ELEM_TYPE::STATE)
-        return index;
-    else
-        return index+20;
-}
-
 static inline vector<DFAstate> generateDFA(vector<vector<int>> &gotoTable)
 {
     vector<DFAstate> DFA, newDFA;
     rightElem initRight={RIGHT_ELEM_TYPE::STATE,SYNTAX_STATE::BEG};
-    auto follow=followSets[initRight];
+    auto follow=followSets[gotoColNum(initRight)];
     projectSet init;
     for (auto iter=follow.begin(); iter!=follow.end(); iter++)
         init.insert({SYNTAX_STATE::SBEG,{{initRight}, 0, *iter}});
@@ -322,7 +344,7 @@ static inline void initActionTable(const vector<DFAstate> DFA, vector<vector<act
     } 
 }
 
-static inline void generateAction(const vector<DFAstate> &DFA, vector<vector<int>> &gotoTable, vector<vector<actionElem>> &actionTable)
+static inline void generateAction(vector<DFAstate> DFA, vector<vector<int>> gotoTable, vector<vector<actionElem>> &actionTable)
 {
     long long x = 0;
     for (auto DFAstate=DFA.begin(); DFAstate!=DFA.end(); DFAstate++) {

@@ -50,6 +50,11 @@ enum GOTO_ELEM_TYPE{
 struct rightElem{
     RIGHT_ELEM_TYPE type;
     int index;
+    bool operator<(const rightElem &r) const {
+        bool typeless = (int)type < (int)r.type;
+        bool indexless = type == r.type && index < r.index;
+        return typeless || indexless;
+    }
 };
 
 // struct formula{
