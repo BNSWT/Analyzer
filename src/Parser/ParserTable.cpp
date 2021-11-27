@@ -4,9 +4,83 @@
  */
 
 #include "Parser.h"
-
+#include <algorithm>
 static projectSet allProj;
+static map<rightElem, vector<enum TYPE>> firstSets;
+static map<rightElem, vector<enum TYPE>> followSets;
 
+bool hasEmpty(rightElem elem)
+{
+    auto range = grammar.equal_range((SYNTAX_STATE)elem.index);
+    if (range.first!=grammar.end()) {
+        for (auto iter=range.first; iter!=range.second; iter++) {
+            if (iter->second.size()==0)
+                return true;
+        }
+    }
+    return false;
+}
+
+static inline void generateFirst()
+{
+    //1.
+    for (enum TYPE type=TYPE::HEAD; type < TYPE::TAIL; type = (enum TYPE)(type+1)) {
+        firstSets.insert({{RIGHT_ELEM_TYPE::TERMINATER, type}, {(enum TYPE)type}});
+    }
+    for (SYNTAX_STATE synState = SYNTAX_STATE::SBEG; synState <= SYNTAX_STATE::V; synState=(SYNTAX_STATE)(synState+1)) {
+        firstSets.insert({{RIGHT_ELEM_TYPE::STATE, synState},{}});
+    }
+    bool updated=false;
+    do{
+        updated = false;
+        for(auto iter=grammar.begin(); iter!=grammar.end(); iter++) {
+            //2.
+            auto left = iter->first;
+            auto rightIter = iter->second.begin();
+            do{
+                for (auto fir=firstSets[*rightIter].begin(); fir!=firstSets[*rightIter].end();fir++) {
+                    firstSets[{RIGHT_ELEM_TYPE::STATE,left}].push_back(*fir);
+                    updated=true;
+                }
+                rightIter++;
+            }while(hasEmpty(*rightIter));
+            //3.
+            if (iter->second.size()==0)
+                firstSets[{RIGHT_ELEM_TYPE::STATE,left}].push_back(TYPE::HEAD);
+        }
+    }while(updated);
+}
+
+static inline void generateFollow()
+{
+    // initialize
+    for (enum TYPE type=TYPE::HEAD; type < TYPE::TAIL; type = (enum TYPE)(type+1)) {
+        firstSets.insert({{RIGHT_ELEM_TYPE::TERMINATER, type}, {}});
+    }
+    for (SYNTAX_STATE synState = SYNTAX_STATE::SBEG; synState <= SYNTAX_STATE::V; synState=(SYNTAX_STATE)(synState+1)) {
+        firstSets.insert({{RIGHT_ELEM_TYPE::STATE, synState},{}});
+    }
+    bool updated=false;
+    do{
+        updated = false;
+        for (auto iter = grammar.begin(); iter!=grammar.end(); iter++) {
+            //2
+            for (auto rightIter = iter->second.begin()+1; rightIter!=iter->second.end(); iter++) {
+                for (auto firIter = firstSets[*(rightIter+1)].begin(); firIter!=firstSets[*(rightIter+1)].end(); firIter++) {
+                    if (*firIter!=TYPE::HEAD)
+                        followSets[*rightIter].push_back(*firIter);
+                }
+            }
+            //3
+            auto tail = iter->second.end()-1;
+            if (find(firstSets[*tail].begin(), firstSets[*tail].end(), TYPE::HEAD)!=firstSets[*tail].end()){
+                for (auto lIter = firstSets[{RIGHT_ELEM_TYPE::STATE,iter->first}].begin(); lIter !=firstSets[{RIGHT_ELEM_TYPE::STATE,iter->first}].end(); lIter++) {
+                    firstSets[*tail].push_back(*lIter);
+                }
+            }
+        }
+    }while(updated);
+}
 
 static inline void getAllProjects()
 {
@@ -151,9 +225,9 @@ static inline int locateDFAstate(vector<DFAstate> DFAstates, projectSet I)
 static inline int locateFormula(pair<SYNTAX_STATE, vector<rightElem>> formula)
 {
     int cnt = 0;
-    for (auto iter=grammar.begin(); iter != grammar.end(); iter++) {
-        cnt++;
-        if (iter->first!=formula.first) {
+    for (auto iter=grammar.begin(); iter != grammar.end(); iter++, cnt++) {
+        // check if *iter and formula are exactly the same.
+        if (iter->first!=formula.first || iter->second.size()!=formula.second.size()) {
             continue;
         }
         auto gIter = iter->second.begin();
@@ -260,8 +334,11 @@ static inline void generateAction(const vector<DFAstate> &DFA, vector<vector<int
             if(dotpos==right.size()) {
                 int nextFormulaNum = locateFormula({iter->first, iter->second.right});
                 for (int i =0;i<actionTable[0].size();i++){
-                    actionTable[curStateNum][i].gotoElemType = GOTO_ELEM_TYPE::INDUCE;
-                    actionTable[curStateNum][i].des=nextFormulaNum;
+                    
+                    if (actionTable[curStateNum][i].gotoElemType==GOTO_ELEM_TYPE::ERR) {
+                        actionTable[curStateNum][i].gotoElemType = GOTO_ELEM_TYPE::INDUCE;
+                        actionTable[curStateNum][i].des=nextFormulaNum;
+                    }
                 } 
             }
             else if (right[dotpos].type==RIGHT_ELEM_TYPE::TERMINATER) {
@@ -320,6 +397,9 @@ static inline void saveTable(const char* actionPath, const char* gotoPath, const
 
 void generateLRTable(vector<vector<int>> &gotoTable, vector<vector<actionElem>> &actionTable)
 {
+    generateFirst();
+    generateFollow();
+
     getAllProjects();
     auto DFA=generateDFA(gotoTable);
     initActionTable(DFA, actionTable);
