@@ -98,5 +98,5 @@ void fileProcess(const char* inputPath, const char* outputPath)
 
 int main()
 {
-    fileProcess("/mnt/Data/Programming/my-wife/Analyzer/data/input_normal.cpp", "/mnt/Data/Programming/my-wife/Analyzer/data/output_normal.txt");
+    fileProcess("/home/yuyangz/Documents/courses/compilation/Analyzer/data/input_normal.cpp", "/home/yuyangz/Documents/courses/compilation/Analyzer/data/output_normal.txt");
 }

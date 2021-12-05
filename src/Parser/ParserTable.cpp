@@ -9,6 +9,8 @@ static projectSet allProj;
 static map<int, vector<enum TYPE>> firstSets;
 static map<int, vector<enum TYPE>> followSets;
 
+int overall;
+
 int gotoColNum(RIGHT_ELEM_TYPE type,int index)
 {   
     if (type == RIGHT_ELEM_TYPE::STATE)
@@ -34,14 +36,8 @@ int gotoColNum(rightElem elem)
 
 bool hasEmpty(rightElem elem)
 {
-    auto range = grammar.equal_range((SYNTAX_STATE)elem.index);
-    if (range.first!=grammar.end()) {
-        for (auto iter=range.first; iter!=range.second; iter++) {
-            if (iter->second.size()==0)
-                return true;
-        }
-    }
-    return false;
+    return find(firstSets[gotoColNum(elem)].begin(), firstSets[gotoColNum(elem)].end(), TYPE::HEAD)!=firstSets[gotoColNum(elem)].end();
+
 }
 
 static inline void generateFirst()
@@ -53,29 +49,46 @@ static inline void generateFirst()
     for (SYNTAX_STATE synState = SYNTAX_STATE::SBEG; synState <= SYNTAX_STATE::V; synState=(SYNTAX_STATE)(synState+1)) {
         firstSets.insert({gotoColNum(synState),{}});
     }
-    auto newFirst=firstSets;
-    do{
-        firstSets=newFirst;
-        for(auto iter=grammar.begin(); iter!=grammar.end(); iter++) {
-            //2.
+
+    //3.
+    for(auto iter=grammar.begin(); iter!=grammar.end(); iter++) {
             auto left = iter->first;
             int leftIndex = gotoColNum(RIGHT_ELEM_TYPE::STATE,left);
-            if (iter->second.size()==0)
+            if (iter->second.size()==0){
+                firstSets[leftIndex].push_back(TYPE::HEAD);
+            }
+    }
+
+    auto newFirst=firstSets;
+    bool updated = false;
+    
+    do{
+        updated = false;
+        firstSets=newFirst;
+        for(auto iter=grammar.begin(); iter!=grammar.end(); iter++) {
+            auto left = iter->first;
+            int leftIndex = gotoColNum(RIGHT_ELEM_TYPE::STATE,left);
+            if (iter->second.size()==0){
                 continue;
+            }
+            //2.
             auto rightIter = iter->second.begin();
-            int mapIndex=gotoColNum(rightIter->type, rightIter->index);
             do{
+                int mapIndex=gotoColNum(rightIter->type, rightIter->index);
                 for (auto fir=firstSets[mapIndex].begin(); fir!=firstSets[mapIndex].end();fir++) {
                     // cout << *fir << endl;
-                    newFirst[leftIndex].push_back(*fir);
+                    
+                    if (find(newFirst[leftIndex].begin(), newFirst[leftIndex].end(), *fir)==newFirst[leftIndex].end()) {
+                        newFirst[leftIndex].push_back(*fir);
+                        updated=true;
+                    }
                 }
+                if (!hasEmpty(*(rightIter)))
+                    break;
                 rightIter++;
-            }while(hasEmpty(*rightIter));
-            //3.
-            if (iter->second.size()==0)
-                newFirst[leftIndex].push_back(TYPE::HEAD);
+            }while(rightIter!=iter->second.end() );
         }
-    }while(firstSets.size()!=newFirst.size());
+    }while(updated);
 }
 
 static inline void generateFollow()
@@ -87,29 +100,46 @@ static inline void generateFollow()
     for (SYNTAX_STATE synState = SYNTAX_STATE::SBEG; synState <= SYNTAX_STATE::V; synState=(SYNTAX_STATE)(synState+1)) {
         followSets.insert({gotoColNum(synState),{}});
     }
+
+    //1
+    followSets[gotoColNum(SYNTAX_STATE::SBEG)].push_back(TYPE::TAIL);
     auto newFollow=followSets;
+    bool updated;
     do{
+        updated = false;
         followSets = newFollow;
         for (auto iter = grammar.begin(); iter!=grammar.end(); iter++) {
             //2
-            for (auto rightIter = iter->second.begin()+1; rightIter<iter->second.end(); rightIter++) {
+            if (iter->second.size()>=2) {
+                for (auto rightIter = iter->second.begin(); rightIter+1!=iter->second.end(); rightIter++) {
                 int nextIndex = gotoColNum(*(rightIter+1));
                 for (auto firIter = firstSets[nextIndex].begin(); firIter!=firstSets[nextIndex].end(); firIter++) {
-                    if (*firIter!=TYPE::HEAD)
-                        newFollow[gotoColNum(*rightIter)].push_back(*firIter);
+                    bool found = (find(newFollow[gotoColNum(*rightIter)].begin(), newFollow[gotoColNum(*rightIter)].end(), *firIter)!=newFollow[gotoColNum(*rightIter)].end());
+                    if (*firIter!=TYPE::HEAD && !found) {
+                        int num = gotoColNum(*rightIter);
+                        newFollow[num].push_back(*firIter);
+                        updated = true;
+                    }
                 }
+            }
             }
             //3
-            if (iter->second.size()==0)
-                continue;
-            auto tail = iter->second.end()-1;
-            if (find(firstSets[gotoColNum(*tail)].begin(), firstSets[gotoColNum(*tail)].end(), TYPE::HEAD)!=firstSets[gotoColNum(*tail)].end()){
-                for (auto lIter = firstSets[gotoColNum(iter->first)].begin(); lIter !=firstSets[gotoColNum(iter->first)].end(); lIter++) {
-                    newFollow[gotoColNum(*tail)].push_back(*lIter);
-                }
+            if (iter->second.size()) {
+                auto tail = iter->second.end();
+                do{
+                    tail--;
+                    for (auto lIter = followSets[gotoColNum(iter->first)].begin(); lIter !=followSets[gotoColNum(iter->first)].end(); lIter++) {
+                        bool found = (find(newFollow[gotoColNum(*tail)].begin(), newFollow[gotoColNum(*tail)].end(), *lIter)!=newFollow[gotoColNum(*tail)].end());
+                        if (!found) {
+                            updated = true;
+                            int num = gotoColNum(*tail);
+                            newFollow[num].push_back(*lIter);
+                        }
+                    }
+                }while(tail!= iter->second.begin()&& find(firstSets[gotoColNum(*tail)].begin(), firstSets[gotoColNum(*tail)].end(), TYPE::HEAD)!=firstSets[gotoColNum(*tail)].end());
             }
         }
-    }while(newFollow.size()!=followSets.size());
+    }while(updated);
 }
 
 static inline void getAllProjects()
@@ -130,8 +160,29 @@ static inline void getAllProjects()
     }
 }
 
+static inline bool equal(projectRight r1, projectRight r2)
+{
+    if (r1.right.size()!=r2.right.size())
+        return false;
+    if (r1.dotpos!=r2.dotpos){
+        return false;
+    }
+    if (r1.look!=r2.look){
+        return false;
+    }
+    auto pIter=r1.right.begin();
+    auto cIter=r2.right.begin();
+    for (; cIter != r2.right.end()&&pIter!=r1.right.end(); cIter++, pIter++) {
+        if (cIter->index!=pIter->index || cIter->type!=pIter->type){
+            return false;
+        }
+    }
+    return true;
+}
+
 static inline bool in(projectSet &child, projectSet &parent)
 {
+    bool found = false;
     for (auto childIter=child.begin(); childIter !=child.end(); childIter++) {
         // ensure the pair can be found in parent.
         auto childKey = childIter->first;
@@ -141,32 +192,10 @@ static inline bool in(projectSet &child, projectSet &parent)
         auto matchedPairs = parent.equal_range(childKey);
 
         // find the pair in this range.
-        bool found = false;
         if(matchedPairs.first!=matchedPairs.second) {
             for (auto pairIter=matchedPairs.first; pairIter != matchedPairs.second; pairIter++) {
                 // check if the two pairs truly equal.
-                found = true;
-                if(pairIter->first!=childKey) {
-                    found = false;
-                    continue;
-                }
-                if (pairIter->second.dotpos!=childValue.dotpos){
-                    found = false;
-                    continue;
-                }
-                if (pairIter->second.look!=childValue.look){
-                    found = false;
-                    continue;
-                }
-                auto value=pairIter->second.right;
-                auto cIter=childValue.right.begin();
-                auto pIter=value.begin();
-                for (; cIter != childValue.right.end()&&pIter!=value.end(); cIter++, pIter++) {
-                    if (cIter->index!=pIter->index || cIter->type!=pIter->type){
-                        found = false;
-                        break;
-                    }
-                }
+                found = equal(pairIter->second, childValue);
                 if (found)
                     break; // check next pair.
             }
@@ -174,13 +203,19 @@ static inline bool in(projectSet &child, projectSet &parent)
         else
             return false;
     }
-    return true;
+    return found;
 }
 
 static inline projectSet closure(projectSet I)
 {
+    if (I.size()==0)
+        return I;
     projectSet clos=I;// deep copy
     projectSet newClos = clos;
+    int D_cnt = 0;
+    auto pairIter = allProj.equal_range(SYNTAX_STATE::D);
+    for (auto iter=pairIter.first; iter!=pairIter.second; iter++)
+        D_cnt++;
     do{
         clos = newClos;
         for (auto iter = clos.begin(); iter != clos.end(); iter++) {
@@ -195,12 +230,16 @@ static inline projectSet closure(projectSet I)
                         //chosenProj is a project begins with synState.
                         projectSet set;
                         set.insert(*chosenProj);
-                        bool subset=in(set ,clos);
+                        bool subset=in(set ,newClos);
                         bool connected = false;
                         if (dotpos+1 < right.size()){
                             auto first=firstSets[gotoColNum(right[dotpos+1])];
                             // chosen look in first.
                             connected=(find(first.begin(), first.end(), chosenProj->second.look)!=first.end());
+                        }
+                        //same look
+                        else if (dotpos+1==right.size()) {
+                            connected = (chosenProj->second.look==iter->second.look);
                         }
                         else {
                             connected = (chosenProj->second.look==TYPE::HEAD);
@@ -219,13 +258,19 @@ static inline projectSet closure(projectSet I)
 static inline projectSet gotoFuc(projectSet cur, rightElem input)
 {
     projectSet dest;
+    int cnt=0;
     for(auto iter=cur.begin(); iter != cur.end(); iter++) {
+        cnt++;
         int dotpos = iter->second.dotpos;
         vector<rightElem> right = iter->second.right;
-        if (dotpos < right.size() && right[dotpos].type==input.type && right[dotpos].index == input.index) {
-            projectRight pRight{right, dotpos+1, iter->second.look};
-            dest.insert({iter->first, pRight});
-        }
+        dotpos--;
+        do {
+            dotpos++;
+            if (dotpos < right.size() && right[dotpos].type==input.type && right[dotpos].index == input.index) {
+                projectRight pRight{right, dotpos+1, iter->second.look};
+                dest.insert({iter->first, pRight});
+            }
+        }while(dotpos < right.size() && hasEmpty({right[dotpos].type,right[dotpos].index}));
     }
     return closure(dest);
 }
@@ -295,10 +340,10 @@ static inline vector<DFAstate> generateDFA(vector<vector<int>> &gotoTable)
 {
     vector<DFAstate> DFA, newDFA;
     rightElem initRight={RIGHT_ELEM_TYPE::STATE,SYNTAX_STATE::BEG};
-    auto follow=followSets[gotoColNum(initRight)];
-    projectSet init;
-    for (auto iter=follow.begin(); iter!=follow.end(); iter++)
-        init.insert({SYNTAX_STATE::SBEG,{{initRight}, 0, *iter}});
+    //1
+    projectSet init={{SYNTAX_STATE::SBEG,{{initRight}, 0, TYPE::TAIL}}};
+    vector<int> gotoRow(60);
+    gotoTable.push_back(gotoRow);
     int num = 0;
     newDFA.push_back({num, closure(init)});
     do {
@@ -312,6 +357,7 @@ static inline vector<DFAstate> generateDFA(vector<vector<int>> &gotoTable)
                         vector<int> gotoRow(60);
                         gotoTable.push_back(gotoRow);
                         newDFA.push_back({++num, nextSet});
+                        overall = num;
                     }
                     gotoTable[iter->num][gotoColNum(RIGHT_ELEM_TYPE::STATE, synState)]=dest;
                 }
@@ -324,6 +370,7 @@ static inline vector<DFAstate> generateDFA(vector<vector<int>> &gotoTable)
                         vector<int> gotoRow(60);
                         gotoTable.push_back(gotoRow);
                         newDFA.push_back({++num, nextSet});
+                        overall = num;
                     }
                     gotoTable[iter->num][gotoColNum(RIGHT_ELEM_TYPE::TERMINATER, type)]=dest;
                 }
@@ -359,10 +406,16 @@ static inline void generateAction(vector<DFAstate> DFA, vector<vector<int>> goto
                 actionTable[curStateNum][iter->second.look].gotoElemType = GOTO_ELEM_TYPE::INDUCE;
                 actionTable[curStateNum][iter->second.look].des=nextFormulaNum;
             }
-            else if (right[dotpos].type==RIGHT_ELEM_TYPE::TERMINATER) {
-                actionTable[curStateNum][right[dotpos].index].gotoElemType=GOTO_ELEM_TYPE::MOVE;
-                actionTable[curStateNum][right[dotpos].index].des=gotoTable[curStateNum][gotoColNum(RIGHT_ELEM_TYPE::TERMINATER, right[dotpos].index)];
-            }
+            else{
+                dotpos--;
+                do{
+                    dotpos++;
+                    if (right[dotpos].type==RIGHT_ELEM_TYPE::TERMINATER) {
+                        actionTable[curStateNum][right[dotpos].index].gotoElemType=GOTO_ELEM_TYPE::MOVE;
+                        actionTable[curStateNum][right[dotpos].index].des=gotoTable[curStateNum][gotoColNum(RIGHT_ELEM_TYPE::TERMINATER, right[dotpos].index)];
+                    }
+                }while(dotpos < right.size() && hasEmpty({right[dotpos].type,right[dotpos].index}));
+            } 
         }
     }
 }
@@ -421,7 +474,7 @@ void generateLRTable(vector<vector<int>> &gotoTable, vector<vector<actionElem>> 
     auto DFA=generateDFA(gotoTable);
     initActionTable(DFA, actionTable);
     generateAction(DFA, gotoTable, actionTable);
-    saveTable("/mnt/Data/Programming/my-wife/Analyzer/data/Actiontable.txt", "/mnt/Data/Programming/my-wife/Analyzer/data/GOTOtable.txt", gotoTable, actionTable);
+    saveTable("/home/yuyangz/Documents/courses/compilation/Analyzer/data/Actiontable.txt", "/home/yuyangz/Documents/courses/compilation/Analyzer/data/GOTOtable.txt", gotoTable, actionTable);
 }
 
 // int main()

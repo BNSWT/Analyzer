@@ -9,16 +9,14 @@ int main()
 {
     char s[] = "abc";
     double d = 1.2;
-    int xVariable=1, y = 2;
+    int xVariable=1;
+    int y = 2;
     int z = 0;
-    if (xVariable < y){
-        z = y/xVariable;
+    if (xVariable <= 0){
+        z = y-xVariable;
     } 
     else {
-        z = xVariable*y;
-    }
-    while (z != 0) {
-        z = z + xVariable;
+        z = xVariable++;
     }
 
     return 0;

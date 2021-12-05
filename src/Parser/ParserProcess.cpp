@@ -139,6 +139,10 @@ static inline void mainProcess(vector<token> &inputString, const vector<vector<i
                     elemStack.pop();
                 }
                 auto left = formula.first;
+                if (stateStack.size())
+                    curState = stateStack.top();
+                else
+                    curState = 0;
                 auto nextState = gotoTable[curState][gotoColNum(RIGHT_ELEM_TYPE::STATE,formula.first)];
                 rightElem nextRightElem{RIGHT_ELEM_TYPE::STATE, left};
                 stateStack.push(nextState);
@@ -160,7 +164,7 @@ static inline void mainProcess(vector<token> &inputString, const vector<vector<i
 
 static inline void saveProcess()
 {
-    string outputPath = "/mnt/Data/Programming/my-wife/Analyzer/data/table.txt";
+    string outputPath = "/home/yuyangz/Documents/courses/compilation/Analyzer/data/table.txt";
     ofstream outfile;
     outfile.open(outputPath);
     if (outfile.fail()) {
@@ -177,10 +181,10 @@ static inline void saveProcess()
         while(iter->symbolStack.size()) {
             auto symbol = iter->symbolStack.top();
             if(symbol.type==RIGHT_ELEM_TYPE::STATE) {
-                outfile << stateNames[symbol.index];
+                outfile << stateNames[symbol.index] << " ";
             }
             else {
-                outfile << names[symbol.index];
+                outfile << names[symbol.index] << " ";
             }
             iter->symbolStack.pop();
         }
@@ -201,7 +205,8 @@ void parserProcess(vector<token> &inputString, const vector<vector<int>> gotoTab
 
 int main()
 {
-    vector<token> inputString=readToken("/mnt/Data/Programming/my-wife/Analyzer/data/output_normal.txt");
+    vector<token> inputString=readToken("/home/yuyangz/Documents/courses/compilation/Analyzer/data/output_normal.txt");
+    inputString.push_back({TYPE::TAIL, "end of file"});
     vector<vector<int>> gotoTable;
     vector<vector<actionElem>> actionTable;
     generateLRTable(gotoTable, actionTable);

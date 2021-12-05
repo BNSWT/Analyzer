@@ -275,7 +275,6 @@ const formulas grammar={
     {
         SYNTAX_STATE::M,
         {
-            {RIGHT_ELEM_TYPE::STATE,SYNTAX_STATE::F},
             {RIGHT_ELEM_TYPE::TERMINATER,TYPE::TYPE},
             {RIGHT_ELEM_TYPE::TERMINATER,TYPE::MAIN},
             {RIGHT_ELEM_TYPE::TERMINATER,TYPE::L_SMA_BRACKET},
@@ -356,6 +355,11 @@ const formulas grammar={
             {RIGHT_ELEM_TYPE::TERMINATER, TYPE::L_BIG_BRACKET},
             {RIGHT_ELEM_TYPE::STATE,SYNTAX_STATE::S},
             {RIGHT_ELEM_TYPE::TERMINATER, TYPE::R_BIG_BRACKET},
+        }
+    },
+    {
+        SYNTAX_STATE::S,
+        {
         }
     },
     {
