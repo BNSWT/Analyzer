@@ -43,7 +43,7 @@ bool hasEmpty(rightElem elem)
 static inline void generateFirst()
 {
     //1.
-    for (enum TYPE type=TYPE::HEAD; type < TYPE::TAIL; type = (enum TYPE)(type+1)) {
+    for (enum TYPE type=TYPE::HEAD; type <= TYPE::TAIL; type = (enum TYPE)(type+1)) {
         firstSets.insert({gotoColNum(type), {(enum TYPE)type}});
     }
     for (SYNTAX_STATE synState = SYNTAX_STATE::SBEG; synState <= SYNTAX_STATE::V; synState=(SYNTAX_STATE)(synState+1)) {
@@ -94,7 +94,7 @@ static inline void generateFirst()
 static inline void generateFollow()
 {
     // initialize
-    for (enum TYPE type=TYPE::HEAD; type < TYPE::TAIL; type = (enum TYPE)(type+1)) {
+    for (enum TYPE type=TYPE::HEAD; type <= TYPE::TAIL; type = (enum TYPE)(type+1)) {
         followSets.insert({gotoColNum(type), {}});
     }
     for (SYNTAX_STATE synState = SYNTAX_STATE::SBEG; synState <= SYNTAX_STATE::V; synState=(SYNTAX_STATE)(synState+1)) {
@@ -362,7 +362,7 @@ static inline vector<DFAstate> generateDFA(vector<vector<int>> &gotoTable)
                     gotoTable[iter->num][gotoColNum(RIGHT_ELEM_TYPE::STATE, synState)]=dest;
                 }
             }
-            for (enum TYPE type=TYPE::HEAD; type < TYPE::TAIL; type = (enum TYPE)(type+1)) {
+            for (enum TYPE type=TYPE::HEAD; type <= TYPE::TAIL; type = (enum TYPE)(type+1)) {
                 auto nextSet = gotoFuc(iter->pSet, {RIGHT_ELEM_TYPE::TERMINATER,type});
                 if (nextSet.size()) {
                     int dest = locateDFAstate(DFA,nextSet);
@@ -384,7 +384,7 @@ static inline void initActionTable(const vector<DFAstate> DFA, vector<vector<act
 {
     for (int i =0 ; i<DFA.size(); i++){
         vector<actionElem> actionRow;
-        for (enum TYPE type=TYPE::HEAD; type < TYPE::TAIL; type = (enum TYPE)(type+1)){
+        for (enum TYPE type=TYPE::HEAD; type <= TYPE::TAIL; type = (enum TYPE)(type+1)){
             actionRow.push_back({GOTO_ELEM_TYPE::ERR, -1});
         }
         actionTable.push_back(actionRow);
@@ -429,7 +429,7 @@ static inline void saveTable(const char* actionPath, const char* gotoPath, const
         cout << "Open " << outputPath << " failed" << endl;
     }
     outfile << setiosflags(ios::left);
-    for (enum TYPE type=TYPE::HEAD; type < TYPE::TAIL; type = (enum TYPE)(type+1)) {
+    for (enum TYPE type=TYPE::HEAD; type <= TYPE::TAIL; type = (enum TYPE)(type+1)) {
         outfile << setw(20) << names[type];
     }
     outfile << endl;
@@ -479,6 +479,8 @@ void generateLRTable(vector<vector<int>> &gotoTable, vector<vector<actionElem>> 
 
 // int main()
 // {
-//     generateLRTable();
+//     vector<vector<int>> gotoTable;
+//     vector<vector<actionElem>> actionTable;
+//     generateLRTable(gotoTable, actionTable);
 //     return 0;
 // }

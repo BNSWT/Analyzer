@@ -330,7 +330,7 @@ const formulas grammar={
     {
         SYNTAX_STATE::S,
         {
-            {RIGHT_ELEM_TYPE::STATE,SYNTAX_STATE::S},
+            // {RIGHT_ELEM_TYPE::STATE,SYNTAX_STATE::S},
             {RIGHT_ELEM_TYPE::TERMINATER, TYPE::IF},
             {RIGHT_ELEM_TYPE::TERMINATER, TYPE::L_SMA_BRACKET},
             {RIGHT_ELEM_TYPE::STATE,SYNTAX_STATE::L},
@@ -522,6 +522,6 @@ const formulas grammar={
 };
 
 
-void parserProcess(vector<token> &inputString, const vector<vector<int>> gotoTable, const vector<vector<actionElem>> actionTable);
+string parserProcess(vector<token> &inputString, const vector<vector<int>> gotoTable, const vector<vector<actionElem>> actionTable);
 void generateLRTable(vector<vector<int>> &gotoTable, vector<vector<actionElem>> &actionTable);
 #endif

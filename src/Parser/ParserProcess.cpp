@@ -34,18 +34,23 @@ static inline void readTable(const char* actionPath, const char* gotoPath, vecto
             actionElem elem;
             char ch;
             ss>>ch;
+            if (ss.fail())
+                break;
             if (ch=='S') {
                 elem.gotoElemType = GOTO_ELEM_TYPE::MOVE;
+                ss>>elem.des;
+                actionElems.push_back(elem);
             }
             else if (ch=='R') {
                 elem.gotoElemType = GOTO_ELEM_TYPE::INDUCE;
+                ss>>elem.des;
+                actionElems.push_back(elem);
             }
             else if (ch=='E'){
                 elem.gotoElemType = GOTO_ELEM_TYPE::ERR;
-                continue;
+                elem.des=-1;
+                actionElems.push_back(elem);
             }
-            ss>>elem.des;
-            actionElems.push_back(elem);
         }
         actionTable.push_back(actionElems);
     }
@@ -69,7 +74,8 @@ static inline void readTable(const char* actionPath, const char* gotoPath, vecto
         while(!ss.fail()){
             int elem;
             ss>>elem;
-            gotoElems.push_back(elem);
+            if (!ss.fail())
+                gotoElems.push_back(elem);
         }
         gotoTable.push_back(gotoElems);
     }
@@ -91,6 +97,8 @@ static inline vector<token> readToken(const char* tokenPath)
         infile >> type;
         string value;
         infile >> value;
+        if (infile.fail())
+            break;
         res.push_back({(enum TYPE)type, value});
     }
     infile.close();
@@ -135,8 +143,10 @@ static inline void mainProcess(vector<token> &inputString, const vector<vector<i
                 vector<rightElem> children;
                 for (int i =0; i < formula.second.size(); i++) {
                     children.push_back(elemStack.top());
+                    // if (formula.second[i].type==elemStack.top().type && formula.second[i].index==elemStack.top().index) {
                     stateStack.pop();
                     elemStack.pop();
+                    // }
                 }
                 auto left = formula.first;
                 if (stateStack.size())
@@ -196,11 +206,12 @@ static inline void saveProcess()
     outfile.close();
 }
 
-void parserProcess(vector<token> &inputString, const vector<vector<int>> gotoTable, const vector<vector<actionElem>> actionTable)
+string parserProcess(vector<token> &inputString, const vector<vector<int>> gotoTable, const vector<vector<actionElem>> actionTable)
 {
     // readTable("/mnt/Data/Programming/my-wife/Analyzer/data/Actiontable.txt", "/mnt/Data/Programming/my-wife/Analyzer/data/GOTOtable.txt");
     mainProcess(inputString, gotoTable, actionTable);
     saveProcess();
+    return errlog;
 }
 
 int main()
@@ -209,7 +220,54 @@ int main()
     inputString.push_back({TYPE::TAIL, "end of file"});
     vector<vector<int>> gotoTable;
     vector<vector<actionElem>> actionTable;
-    generateLRTable(gotoTable, actionTable);
+    // generateLRTable(gotoTable, actionTable);
+
+    // vector<vector<int>> read_gotoTable;
+    // vector<vector<actionElem>> read_actionTable;
+    readTable("/home/yuyangz/Documents/courses/compilation/Analyzer/data/Actiontable.txt", "/home/yuyangz/Documents/courses/compilation/Analyzer/data/GOTOtable.txt", gotoTable, actionTable);
+
+    // //compare action
+    // if (actionTable.size()!=read_actionTable.size()) {
+    //     cout << "action row num wrong!" << endl;
+    // }
+    // else {
+    //     for (int i =0; i<actionTable.size(); i++) {
+    //         if (actionTable[i].size()!=read_actionTable[i].size()) {
+    //             cout << "action row " << i << " col num wrong " << endl;
+    //             continue;
+    //         }
+    //         for (int j = 0; j < actionTable[i].size();j++) {
+    //             if (actionTable[i][j].des!=read_actionTable[i][j].des) {
+    //                 cout << "action[" << i << "][" << j << "] des wrong" << endl;
+    //             }
+    //             if (actionTable[i][j].gotoElemType!=read_actionTable[i][j].gotoElemType) {
+    //                 cout << "action[" << i << "][" << j << "] type wrong" << endl;
+    //             }
+    //         }
+    //     }
+    // }
+    // cout << "end of action test" << endl;
+
+    // //compare goto
+    // if (gotoTable.size()!=read_gotoTable.size()) {
+    //     cout << "goto row num wrong!" << endl;
+    // }
+    // else {
+    //     for (int i =0; i<gotoTable.size(); i++) {
+    //         if (gotoTable[i].size()!=read_gotoTable[i].size()) {
+    //             cout << "goto row " << i << " col num wrong " << endl;
+    //             continue;
+    //         }
+    //         for (int j = 0; j < gotoTable[i].size();j++) {
+    //             if (gotoTable[i][j]!=read_gotoTable[i][j]) {
+    //                 cout << "goto[" << i << "][" << j << "] wrong" << endl;
+    //             }
+    //         }
+    //     }
+    // }
+    // cout << "end of goto test" << endl;
+
     parserProcess(inputString, gotoTable, actionTable);
+
     return 0;
 }
