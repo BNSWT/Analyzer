@@ -49,6 +49,7 @@ void MainWindow::on_pushButton_Start_clicked()
     lexicalRes.push_back({TYPE::TAIL, "end of file"});
     auto inputString = lexicalRes;
     readTable("/home/yuyangz/Documents/courses/compilation/Analyzer/data/Actiontable.txt", "/home/yuyangz/Documents/courses/compilation/Analyzer/data/GOTOtable.txt", gotoTable, actionTable);
+    errlog.clear();
     parserProcess(inputString, gotoTable, actionTable, parseProcess, errlog);
     QMessageBox::information(this, "提示", "语法分析成功！");
 

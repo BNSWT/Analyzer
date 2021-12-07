@@ -215,6 +215,8 @@ static inline void saveProcess()
 void parserProcess(vector<token> &inputString, const vector<vector<int>> gotoTable, const vector<vector<actionElem>> actionTable, vector<analyzeProcess> &process, string &log)
 {
     // readTable("/mnt/Data/Programming/my-wife/Analyzer/data/Actiontable.txt", "/mnt/Data/Programming/my-wife/Analyzer/data/GOTOtable.txt");
+    errlog.clear();
+    parseProcess.clear();
     mainProcess(inputString, gotoTable, actionTable);
     process = parseProcess;
     saveProcess();
