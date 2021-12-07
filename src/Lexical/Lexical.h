@@ -249,7 +249,7 @@ const string dicts[][10] = {
 };
 
 const string names[]={
-    "",
+    "EPSILON",
     "WELL",
     "INCLUDE",
     "CHAR",

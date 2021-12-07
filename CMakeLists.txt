@@ -19,9 +19,16 @@ set(PROJECT_SOURCES
         ./src/View/mainwindow.cpp
         ./src/View/mainwindow.h
         ./src/View/mainwindow.ui
+        ./src/View/dialog.ui
         ./src/Lexical/LexicalProcess.cpp
         ./src/Lexical/LexicalDFA.cpp
         ./src/Lexical/Lexical.h
+        ./src/Parser/Parser.h
+        ./src/Parser/ParserProcess.cpp
+        ./src/Parser/ParserTable.cpp
+
+        ./src/View/dialog.h
+        ./src/View/dialog.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

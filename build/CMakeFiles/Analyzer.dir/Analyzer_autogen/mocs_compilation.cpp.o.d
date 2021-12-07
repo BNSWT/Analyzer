@@ -1,7 +1,7 @@
 CMakeFiles/Analyzer.dir/Analyzer_autogen/mocs_compilation.cpp.o: \
  /home/yuyangz/Documents/courses/compilation/Analyzer/build/Analyzer_autogen/mocs_compilation.cpp \
  /usr/include/stdc-predef.h \
- /home/yuyangz/Documents/courses/compilation/Analyzer/build/Analyzer_autogen/GT66W5ZSTU/moc_mainwindow.cpp \
+ /home/yuyangz/Documents/courses/compilation/Analyzer/build/Analyzer_autogen/GT66W5ZSTU/moc_dialog.cpp \
  /usr/include/c++/11.1.0/memory \
  /usr/include/c++/11.1.0/bits/stl_algobase.h \
  /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/c++config.h \
@@ -100,9 +100,8 @@ CMakeFiles/Analyzer.dir/Analyzer_autogen/mocs_compilation.cpp.o: \
  /usr/include/c++/11.1.0/bits/atomic_base.h \
  /usr/include/c++/11.1.0/bits/atomic_lockfree_defines.h \
  /usr/include/c++/11.1.0/backward/auto_ptr.h \
- /home/yuyangz/Documents/courses/compilation/Analyzer/build/Analyzer_autogen/GT66W5ZSTU/../../../src/View/mainwindow.h \
- /usr/include/qt/QtWidgets/QMainWindow \
- /usr/include/qt/QtWidgets/qmainwindow.h \
+ /home/yuyangz/Documents/courses/compilation/Analyzer/build/Analyzer_autogen/GT66W5ZSTU/../../../src/View/dialog.h \
+ /usr/include/qt/QtWidgets/QWidget /usr/include/qt/QtWidgets/qwidget.h \
  /usr/include/qt/QtWidgets/qtwidgetsglobal.h \
  /usr/include/qt/QtGui/qtguiglobal.h /usr/include/qt/QtCore/qglobal.h \
  /usr/include/c++/11.1.0/cstddef /usr/include/assert.h \
@@ -131,8 +130,8 @@ CMakeFiles/Analyzer.dir/Analyzer_autogen/mocs_compilation.cpp.o: \
  /usr/include/qt/QtCore/qversiontagging.h \
  /usr/include/qt/QtGui/qtgui-config.h \
  /usr/include/qt/QtWidgets/qtwidgets-config.h \
- /usr/include/qt/QtWidgets/qwidget.h /usr/include/qt/QtGui/qwindowdefs.h \
- /usr/include/qt/QtCore/qobjectdefs.h /usr/include/qt/QtCore/qnamespace.h \
+ /usr/include/qt/QtGui/qwindowdefs.h /usr/include/qt/QtCore/qobjectdefs.h \
+ /usr/include/qt/QtCore/qnamespace.h \
  /usr/include/qt/QtCore/qobjectdefs_impl.h \
  /usr/include/qt/QtCore/qobject.h /usr/include/qt/QtCore/qstring.h \
  /usr/include/qt/QtCore/qchar.h /usr/include/qt/QtCore/qbytearray.h \
@@ -222,10 +221,46 @@ CMakeFiles/Analyzer.dir/Analyzer_autogen/mocs_compilation.cpp.o: \
  /usr/include/qt/QtGui/qfont.h /usr/include/qt/QtGui/qfontmetrics.h \
  /usr/include/qt/QtGui/qfontinfo.h \
  /usr/include/qt/QtWidgets/qsizepolicy.h /usr/include/qt/QtGui/qcursor.h \
- /usr/include/qt/QtGui/qkeysequence.h \
+ /usr/include/qt/QtGui/qkeysequence.h /usr/include/qt/QtWidgets/QDialog \
+ /usr/include/qt/QtWidgets/qdialog.h /usr/include/qt/QtWidgets/qwidget.h \
+ /usr/include/qt/QtCore/QAbstractItemModel \
+ /usr/include/qt/QtCore/qabstractitemmodel.h \
+ /usr/include/qt/QtCore/qvariant.h /usr/include/qt/QtCore/qmap.h \
+ /home/yuyangz/Documents/courses/compilation/Analyzer/build/Analyzer_autogen/GT66W5ZSTU/moc_mainwindow.cpp \
+ /home/yuyangz/Documents/courses/compilation/Analyzer/build/Analyzer_autogen/GT66W5ZSTU/../../../src/View/mainwindow.h \
+ /home/yuyangz/Documents/courses/compilation/Analyzer/build/../src/Parser/Parser.h \
+ /home/yuyangz/Documents/courses/compilation/Analyzer/build/../src/Parser/../Lexical/Lexical.h \
+ /usr/include/c++/11.1.0/cstring /usr/include/c++/11.1.0/iostream \
+ /usr/include/c++/11.1.0/ostream /usr/include/c++/11.1.0/ios \
+ /usr/include/c++/11.1.0/bits/basic_ios.h \
+ /usr/include/c++/11.1.0/bits/locale_facets.h \
+ /usr/include/c++/11.1.0/cwctype /usr/include/wctype.h \
+ /usr/include/bits/wctype-wchar.h \
+ /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/ctype_base.h \
+ /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/ctype_inline.h \
+ /usr/include/c++/11.1.0/bits/locale_facets.tcc \
+ /usr/include/c++/11.1.0/bits/basic_ios.tcc \
+ /usr/include/c++/11.1.0/bits/ostream.tcc /usr/include/c++/11.1.0/istream \
+ /usr/include/c++/11.1.0/bits/istream.tcc /usr/include/c++/11.1.0/sstream \
+ /usr/include/c++/11.1.0/bits/sstream.tcc /usr/include/c++/11.1.0/fstream \
+ /usr/include/c++/11.1.0/bits/codecvt.h \
+ /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/basic_file.h \
+ /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/c++io.h \
+ /usr/include/c++/11.1.0/bits/fstream.tcc /usr/include/c++/11.1.0/iomanip \
+ /usr/include/c++/11.1.0/locale \
+ /usr/include/c++/11.1.0/bits/locale_facets_nonio.h \
+ /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/time_members.h \
+ /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/messages_members.h \
+ /usr/include/libintl.h \
+ /usr/include/c++/11.1.0/bits/locale_facets_nonio.tcc \
+ /usr/include/c++/11.1.0/bits/locale_conv.h /usr/include/c++/11.1.0/stack \
+ /usr/include/c++/11.1.0/deque /usr/include/c++/11.1.0/bits/stl_deque.h \
+ /usr/include/c++/11.1.0/bits/deque.tcc \
+ /usr/include/c++/11.1.0/bits/stl_stack.h \
+ /usr/include/qt/QtWidgets/QMainWindow \
+ /usr/include/qt/QtWidgets/qmainwindow.h \
  /usr/include/qt/QtWidgets/qtabwidget.h /usr/include/qt/QtGui/qicon.h \
  /usr/include/qt/QtWidgets/QAction /usr/include/qt/QtWidgets/qaction.h \
- /usr/include/qt/QtCore/qvariant.h /usr/include/qt/QtCore/qmap.h \
  /usr/include/qt/QtWidgets/qactiongroup.h \
  /usr/include/qt/QtWidgets/qaction.h /usr/include/qt/QtCore/QFile \
  /usr/include/qt/QtCore/qfile.h /usr/include/qt/QtCore/qfiledevice.h \

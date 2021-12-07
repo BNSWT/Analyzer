@@ -521,7 +521,7 @@ const formulas grammar={
     }
 };
 
-
-string parserProcess(vector<token> &inputString, const vector<vector<int>> gotoTable, const vector<vector<actionElem>> actionTable);
+void readTable(const char* actionPath, const char* gotoPath, vector<vector<int>> &gotoTable,vector<vector<actionElem>> &actionTable);
+void parserProcess(vector<token> &inputString, const vector<vector<int>> gotoTable, const vector<vector<actionElem>> actionTable, vector<analyzeProcess> &process, string &log);
 void generateLRTable(vector<vector<int>> &gotoTable, vector<vector<actionElem>> &actionTable);
 #endif

@@ -1,5 +1,7 @@
 /home/yuyangz/Documents/courses/compilation/Analyzer/build/Analyzer_autogen/GT66W5ZSTU/moc_mainwindow.cpp: /home/yuyangz/Documents/courses/compilation/Analyzer/src/View/mainwindow.h \
   /home/yuyangz/Documents/courses/compilation/Analyzer/build/Analyzer_autogen/moc_predefs.h \
+  /home/yuyangz/Documents/courses/compilation/Analyzer/src/Lexical/Lexical.h \
+  /home/yuyangz/Documents/courses/compilation/Analyzer/src/Parser/Parser.h \
   /usr/include/asm-generic/errno-base.h \
   /usr/include/asm-generic/errno.h \
   /usr/include/asm/errno.h \
@@ -83,25 +85,32 @@
   /usr/include/c++/11.1.0/bits/c++0x_warning.h \
   /usr/include/c++/11.1.0/bits/char_traits.h \
   /usr/include/c++/11.1.0/bits/charconv.h \
+  /usr/include/c++/11.1.0/bits/codecvt.h \
   /usr/include/c++/11.1.0/bits/concept_check.h \
   /usr/include/c++/11.1.0/bits/cpp_type_traits.h \
   /usr/include/c++/11.1.0/bits/cxxabi_forced.h \
   /usr/include/c++/11.1.0/bits/cxxabi_init_exception.h \
+  /usr/include/c++/11.1.0/bits/deque.tcc \
   /usr/include/c++/11.1.0/bits/erase_if.h \
   /usr/include/c++/11.1.0/bits/exception.h \
   /usr/include/c++/11.1.0/bits/exception_defines.h \
   /usr/include/c++/11.1.0/bits/exception_ptr.h \
+  /usr/include/c++/11.1.0/bits/fstream.tcc \
   /usr/include/c++/11.1.0/bits/functexcept.h \
   /usr/include/c++/11.1.0/bits/functional_hash.h \
   /usr/include/c++/11.1.0/bits/hash_bytes.h \
   /usr/include/c++/11.1.0/bits/invoke.h \
   /usr/include/c++/11.1.0/bits/ios_base.h \
+  /usr/include/c++/11.1.0/bits/istream.tcc \
   /usr/include/c++/11.1.0/bits/iterator_concepts.h \
   /usr/include/c++/11.1.0/bits/list.tcc \
   /usr/include/c++/11.1.0/bits/locale_classes.h \
   /usr/include/c++/11.1.0/bits/locale_classes.tcc \
+  /usr/include/c++/11.1.0/bits/locale_conv.h \
   /usr/include/c++/11.1.0/bits/locale_facets.h \
   /usr/include/c++/11.1.0/bits/locale_facets.tcc \
+  /usr/include/c++/11.1.0/bits/locale_facets_nonio.h \
+  /usr/include/c++/11.1.0/bits/locale_facets_nonio.tcc \
   /usr/include/c++/11.1.0/bits/localefwd.h \
   /usr/include/c++/11.1.0/bits/max_size_type.h \
   /usr/include/c++/11.1.0/bits/memoryfwd.h \
@@ -113,6 +122,7 @@
   /usr/include/c++/11.1.0/bits/postypes.h \
   /usr/include/c++/11.1.0/bits/predefined_ops.h \
   /usr/include/c++/11.1.0/bits/ptr_traits.h \
+  /usr/include/c++/11.1.0/bits/quoted_string.h \
   /usr/include/c++/11.1.0/bits/range_access.h \
   /usr/include/c++/11.1.0/bits/ranges_algo.h \
   /usr/include/c++/11.1.0/bits/ranges_algobase.h \
@@ -124,6 +134,7 @@
   /usr/include/c++/11.1.0/bits/shared_ptr.h \
   /usr/include/c++/11.1.0/bits/shared_ptr_atomic.h \
   /usr/include/c++/11.1.0/bits/shared_ptr_base.h \
+  /usr/include/c++/11.1.0/bits/sstream.tcc \
   /usr/include/c++/11.1.0/bits/std_abs.h \
   /usr/include/c++/11.1.0/bits/std_function.h \
   /usr/include/c++/11.1.0/bits/std_mutex.h \
@@ -131,6 +142,7 @@
   /usr/include/c++/11.1.0/bits/stl_algobase.h \
   /usr/include/c++/11.1.0/bits/stl_bvector.h \
   /usr/include/c++/11.1.0/bits/stl_construct.h \
+  /usr/include/c++/11.1.0/bits/stl_deque.h \
   /usr/include/c++/11.1.0/bits/stl_function.h \
   /usr/include/c++/11.1.0/bits/stl_heap.h \
   /usr/include/c++/11.1.0/bits/stl_iterator.h \
@@ -143,6 +155,7 @@
   /usr/include/c++/11.1.0/bits/stl_pair.h \
   /usr/include/c++/11.1.0/bits/stl_raw_storage_iter.h \
   /usr/include/c++/11.1.0/bits/stl_relops.h \
+  /usr/include/c++/11.1.0/bits/stl_stack.h \
   /usr/include/c++/11.1.0/bits/stl_tempbuf.h \
   /usr/include/c++/11.1.0/bits/stl_tree.h \
   /usr/include/c++/11.1.0/bits/stl_uninitialized.h \
@@ -165,11 +178,15 @@
   /usr/include/c++/11.1.0/concepts \
   /usr/include/c++/11.1.0/cstddef \
   /usr/include/c++/11.1.0/cstdint \
+  /usr/include/c++/11.1.0/cstdio \
   /usr/include/c++/11.1.0/cstdlib \
+  /usr/include/c++/11.1.0/cstring \
+  /usr/include/c++/11.1.0/ctime \
   /usr/include/c++/11.1.0/cwchar \
   /usr/include/c++/11.1.0/cwctype \
   /usr/include/c++/11.1.0/debug/assertions.h \
   /usr/include/c++/11.1.0/debug/debug.h \
+  /usr/include/c++/11.1.0/deque \
   /usr/include/c++/11.1.0/exception \
   /usr/include/c++/11.1.0/ext/aligned_buffer.h \
   /usr/include/c++/11.1.0/ext/alloc_traits.h \
@@ -179,13 +196,18 @@
   /usr/include/c++/11.1.0/ext/numeric_traits.h \
   /usr/include/c++/11.1.0/ext/string_conversions.h \
   /usr/include/c++/11.1.0/ext/type_traits.h \
+  /usr/include/c++/11.1.0/fstream \
   /usr/include/c++/11.1.0/functional \
   /usr/include/c++/11.1.0/initializer_list \
+  /usr/include/c++/11.1.0/iomanip \
   /usr/include/c++/11.1.0/ios \
   /usr/include/c++/11.1.0/iosfwd \
+  /usr/include/c++/11.1.0/iostream \
+  /usr/include/c++/11.1.0/istream \
   /usr/include/c++/11.1.0/iterator \
   /usr/include/c++/11.1.0/limits \
   /usr/include/c++/11.1.0/list \
+  /usr/include/c++/11.1.0/locale \
   /usr/include/c++/11.1.0/map \
   /usr/include/c++/11.1.0/memory \
   /usr/include/c++/11.1.0/new \
@@ -196,6 +218,8 @@
   /usr/include/c++/11.1.0/pstl/glue_algorithm_defs.h \
   /usr/include/c++/11.1.0/pstl/glue_memory_defs.h \
   /usr/include/c++/11.1.0/pstl/glue_numeric_defs.h \
+  /usr/include/c++/11.1.0/sstream \
+  /usr/include/c++/11.1.0/stack \
   /usr/include/c++/11.1.0/stdexcept \
   /usr/include/c++/11.1.0/stdlib.h \
   /usr/include/c++/11.1.0/streambuf \
@@ -208,20 +232,25 @@
   /usr/include/c++/11.1.0/utility \
   /usr/include/c++/11.1.0/vector \
   /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/atomic_word.h \
+  /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/basic_file.h \
   /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/c++allocator.h \
   /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/c++config.h \
+  /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/c++io.h \
   /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/c++locale.h \
   /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/cpu_defines.h \
   /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/ctype_base.h \
   /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/ctype_inline.h \
   /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/gthr-default.h \
   /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/gthr.h \
+  /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/messages_members.h \
   /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/os_defines.h \
+  /usr/include/c++/11.1.0/x86_64-pc-linux-gnu/bits/time_members.h \
   /usr/include/ctype.h \
   /usr/include/errno.h \
   /usr/include/features.h \
   /usr/include/gnu/stubs-64.h \
   /usr/include/gnu/stubs.h \
+  /usr/include/libintl.h \
   /usr/include/linux/errno.h \
   /usr/include/locale.h \
   /usr/include/pthread.h \

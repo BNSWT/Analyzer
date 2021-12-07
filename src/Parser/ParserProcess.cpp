@@ -12,7 +12,7 @@ static string errlog;
 extern int gotoColNum(RIGHT_ELEM_TYPE rType, int index);
 extern pair<SYNTAX_STATE, vector<rightElem>> findFormula(int cnt);
 
-static inline void readTable(const char* actionPath, const char* gotoPath, vector<vector<int>> &gotoTable,vector<vector<actionElem>> &actionTable)
+void readTable(const char* actionPath, const char* gotoPath, vector<vector<int>> &gotoTable,vector<vector<actionElem>> &actionTable)
 {
     string inputPath = actionPath;
     ifstream infile;
@@ -113,7 +113,9 @@ static inline analyzeTree makeTree(multimap<rightElem, vector<rightElem>> treeIn
 
 static inline string wrongHint(token term)
 {
-    return  "the" + names[term.type] + " " + term.value + "is not recognized";
+    if (term.type==TYPE::UNDEFINED)
+        return "undefined symbol" + term.value;
+    return  "the " + names[term.type] + " " + term.value + " is not recognized";
 }
 
 static inline void mainProcess(vector<token> &inputString, const vector<vector<int>> gotoTable, const vector<vector<actionElem>> actionTable)
@@ -163,6 +165,10 @@ static inline void mainProcess(vector<token> &inputString, const vector<vector<i
                 break;
             }
             default:
+                if (stateStack.size()==1 && stateStack.top()==0 && inputString.size()==1 && inputString[0].type==TYPE::TAIL) {
+                    inputString.erase(inputString.begin());
+                    break;
+                }
                 errlog = wrongHint(term);
                 break;
         }
@@ -206,14 +212,15 @@ static inline void saveProcess()
     outfile.close();
 }
 
-string parserProcess(vector<token> &inputString, const vector<vector<int>> gotoTable, const vector<vector<actionElem>> actionTable)
+void parserProcess(vector<token> &inputString, const vector<vector<int>> gotoTable, const vector<vector<actionElem>> actionTable, vector<analyzeProcess> &process, string &log)
 {
     // readTable("/mnt/Data/Programming/my-wife/Analyzer/data/Actiontable.txt", "/mnt/Data/Programming/my-wife/Analyzer/data/GOTOtable.txt");
     mainProcess(inputString, gotoTable, actionTable);
+    process = parseProcess;
     saveProcess();
-    return errlog;
+    log = errlog;
 }
-
+/*
 int main()
 {
     vector<token> inputString=readToken("/home/yuyangz/Documents/courses/compilation/Analyzer/data/output_normal.txt");
@@ -270,4 +277,4 @@ int main()
     parserProcess(inputString, gotoTable, actionTable);
 
     return 0;
-}
+}*/

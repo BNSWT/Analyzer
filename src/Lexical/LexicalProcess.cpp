@@ -96,7 +96,7 @@ void fileProcess(const char* inputPath, const char* outputPath)
     outfile.close();
 }
 
-int main()
+/*int main()
 {
     fileProcess("/home/yuyangz/Documents/courses/compilation/Analyzer/data/input_normal.cpp", "/home/yuyangz/Documents/courses/compilation/Analyzer/data/output_normal.txt");
-}
+}*/
