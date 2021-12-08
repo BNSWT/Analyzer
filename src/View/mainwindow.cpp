@@ -48,7 +48,7 @@ void MainWindow::on_pushButton_Start_clicked()
     lexicalRes = lexicalProcess(input.toStdString());
     lexicalRes.push_back({TYPE::TAIL, "end of file"});
     auto inputString = lexicalRes;
-    readTable("/home/yuyangz/Documents/courses/compilation/Analyzer/data/Actiontable.txt", "/home/yuyangz/Documents/courses/compilation/Analyzer/data/GOTOtable.txt", gotoTable, actionTable);
+    readTable("data/Actiontable.txt", "data/GOTOtable.txt", gotoTable, actionTable);
     errlog.clear();
     parserProcess(inputString, gotoTable, actionTable, parseProcess, errlog);
     QMessageBox::information(this, "提示", "语法分析成功！");
@@ -139,7 +139,7 @@ void MainWindow::on_pushButton_Syntax_clicked()
 void MainWindow::on_pushButton_Action_clicked()
 {
     if (actionTable.size()==0)
-        readTable("/home/yuyangz/Documents/courses/compilation/Analyzer/data/Actiontable.txt", "/home/yuyangz/Documents/courses/compilation/Analyzer/data/GOTOtable.txt", gotoTable, actionTable);
+        readTable("data/Actiontable.txt", "data/GOTOtable.txt", gotoTable, actionTable);
     auto res = actionTable;
 
     QStandardItemModel* tableModel = new QStandardItemModel();
@@ -174,7 +174,7 @@ void MainWindow::on_pushButton_Action_clicked()
 void MainWindow::on_pushButton_Goto_clicked()
 {
     if (gotoTable.size()==0)
-        readTable("/home/yuyangz/Documents/courses/compilation/Analyzer/data/Actiontable.txt", "/home/yuyangz/Documents/courses/compilation/Analyzer/data/GOTOtable.txt", gotoTable, actionTable);
+        readTable("data/Actiontable.txt", "data/GOTOtable.txt", gotoTable, actionTable);
     auto res = gotoTable;
 
     QStandardItemModel* tableModel = new QStandardItemModel();

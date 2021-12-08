@@ -1,6 +1,0 @@
-<identifier, char>
-<identifier, s>
-<bracket symbol, [>
-<bracket symbol, ]>
-<assign symbol, =>
-<string, ";>
